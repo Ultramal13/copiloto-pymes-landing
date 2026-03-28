@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Copiloto de Pymes — Tu escudo tributario y laboral con IA</title>
     <meta name="description" content="IA que monitorea tu cumplimiento tributario y laboral. Alertas 30 días antes de cada vencimiento. Protege tu empresa del SII. Desde gratis.">
+
+    <!-- Open Graph / WhatsApp / redes sociales -->
+    <meta property="og:type"        content="website">
+    <meta property="og:url"         content="https://copiloto-pymes-landing.vercel.app/">
+    <meta property="og:title"       content="Copiloto de Pymes — Tu escudo tributario y laboral con IA">
+    <meta property="og:description" content="IA que monitorea tu cumplimiento tributario y laboral. Alertas 30 días antes de cada vencimiento. Acceso anticipado — cupos limitados.">
+    <meta property="og:image"       content="https://copiloto-pymes-landing.vercel.app/og-image.svg">
+    <meta property="og:locale"      content="es_CL">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card"        content="summary_large_image">
+    <meta name="twitter:title"       content="Copiloto de Pymes — Tu escudo tributario y laboral con IA">
+    <meta name="twitter:description" content="IA que monitorea tu cumplimiento tributario y laboral. Alertas 30 días antes de cada vencimiento.">
+    <meta name="twitter:image"       content="https://copiloto-pymes-landing.vercel.app/og-image.svg">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -295,6 +310,22 @@
             .context-text p { font-size: 14px; }
             .social-proof { flex-direction: column; gap: 8px; }
         }
+
+        /* WHATSAPP BUTTON */
+        .whatsapp-btn {
+            position: fixed; bottom: 28px; right: 28px; z-index: 999;
+            width: 60px; height: 60px; border-radius: 50%;
+            background: #25D366;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 24px rgba(37,211,102,0.45);
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .whatsapp-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 32px rgba(37,211,102,0.6);
+        }
+        .whatsapp-btn svg { width: 32px; height: 32px; }
     </style>
 </head>
 <body>
@@ -744,5 +775,15 @@
         `;
     }
 </script>
+
+<!-- WHATSAPP FLOTANTE — reemplaza XXXXXXXXXXX por tu número (ej: 56912345678) -->
+<a href="https://wa.me/XXXXXXXXXXX?text=Hola%2C%20me%20interesa%20Copiloto%20de%20Pymes%20%F0%9F%91%8B"
+   target="_blank" rel="noopener noreferrer"
+   class="whatsapp-btn"
+   aria-label="Contactar por WhatsApp">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#fff" d="M16 2C8.268 2 2 8.268 2 16c0 2.478.648 4.805 1.782 6.82L2 30l7.38-1.754A13.93 13.93 0 0016 30c7.732 0 14-6.268 14-14S23.732 2 16 2zm0 25.6a11.545 11.545 0 01-5.89-1.608l-.422-.252-4.38 1.042 1.078-4.262-.276-.436A11.545 11.545 0 014.4 16C4.4 9.59 9.59 4.4 16 4.4S27.6 9.59 27.6 16 22.41 27.6 16 27.6zm6.334-8.664c-.347-.174-2.055-1.014-2.374-1.13-.318-.116-.55-.174-.78.174-.232.347-.896 1.13-1.098 1.362-.202.232-.404.26-.75.087-.347-.174-1.464-.54-2.788-1.72-1.03-.918-1.726-2.052-1.928-2.399-.202-.347-.022-.535.152-.708.156-.156.347-.405.52-.608.174-.202.232-.347.347-.578.116-.232.058-.434-.029-.608-.087-.174-.78-1.882-1.07-2.578-.28-.676-.566-.584-.78-.595l-.664-.011c-.232 0-.608.087-.926.434-.318.347-1.214 1.186-1.214 2.894 0 1.708 1.243 3.358 1.416 3.59.174.232 2.447 3.734 5.929 5.236.829.358 1.476.572 1.98.732.832.265 1.589.228 2.187.138.667-.1 2.055-.84 2.346-1.652.29-.812.29-1.508.202-1.652-.086-.144-.318-.232-.664-.405z"/>
+    </svg>
+</a>
 </body>
 </html>
