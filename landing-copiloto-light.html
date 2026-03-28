@@ -724,7 +724,8 @@
             nombre:    raw.nombre    || '',
             empresa:   raw.empresa   || '',
             email:     raw.email     || '',
-            empleados: raw.empleados || ''
+            empleados: raw.empleados || '',
+            fuente:    formId === 'cta-form' ? 'footer' : 'hero'
         });
 
         fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body })
