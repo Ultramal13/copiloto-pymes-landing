@@ -528,12 +528,14 @@
                     <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
                     <div class="mock-url">copiloto-pymes-landing.vercel.app/dashboard.html</div>
                 </div>
-                <a href="dashboard.html" target="_blank" style="display:block;line-height:0;">
+                <div style="position:relative;line-height:0;overflow:hidden;">
                     <img src="dashboard-screenshot.jpg"
                          alt="Dashboard Copiloto de Pymes — Panel de control real"
-                         style="width:100%;height:auto;display:block;border-radius:0 0 12px 12px;"
+                         style="width:100%;height:auto;display:block;border-radius:0 0 12px 12px;transition:transform 0.5s ease,filter 0.5s ease;"
+                         onmouseover="this.style.transform='scale(1.02)';this.style.filter='brightness(1.06)'"
+                         onmouseout="this.style.transform='scale(1)';this.style.filter='brightness(1)'"
                          loading="lazy">
-                </a>
+                </div>
             </div>
         </div>
     </div>
