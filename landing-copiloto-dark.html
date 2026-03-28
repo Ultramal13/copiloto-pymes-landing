@@ -861,7 +861,12 @@
         gform.target = iframeName;
         gform.style.display = 'none';
 
-        const fields = { [FORM_CONFIG.fields.email]: raw.email || '' };
+        const fields = {
+            fvv: '1',
+            pageHistory: '0',
+            fbzx: String(Math.floor(Math.random() * 9e18)),
+            [FORM_CONFIG.fields.email]: raw.email || ''
+        };
         if (raw.nombre)    fields[FORM_CONFIG.fields.nombre]    = raw.nombre;
         if (raw.empresa)   fields[FORM_CONFIG.fields.empresa]   = raw.empresa;
         if (raw.empleados) fields[FORM_CONFIG.fields.empleados] = raw.empleados;
