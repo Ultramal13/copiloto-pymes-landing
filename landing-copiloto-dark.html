@@ -848,41 +848,17 @@
 
         const raw = Object.fromEntries(new FormData(form));
 
-        // Método iframe — único confiable para Google Forms sin backend
-        const iframeName = 'gf_' + Date.now();
-        const iframe = document.createElement('iframe');
-        iframe.name = iframeName;
-        iframe.style.display = 'none';
-        document.body.appendChild(iframe);
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyNCUlraNdbw8aNMd4aQx-2rhnUppQJENJ3QOtqVQj_DiVS0ezAU0epwzwErwseMquA/exec';
 
-        const gform = document.createElement('form');
-        gform.method = 'POST';
-        gform.action = FORM_CONFIG.action;
-        gform.target = iframeName;
-        gform.style.display = 'none';
-
-        const fields = {
-            fvv: '1',
-            pageHistory: '0',
-            fbzx: String(Math.floor(Math.random() * 9e18)),
-            [FORM_CONFIG.fields.email]: raw.email || ''
-        };
-        if (raw.nombre)    fields[FORM_CONFIG.fields.nombre]    = raw.nombre;
-        if (raw.empresa)   fields[FORM_CONFIG.fields.empresa]   = raw.empresa;
-        if (raw.empleados) fields[FORM_CONFIG.fields.empleados] = raw.empleados;
-
-        Object.entries(fields).forEach(([name, value]) => {
-            const inp = document.createElement('input');
-            inp.type = 'hidden'; inp.name = name; inp.value = value;
-            gform.appendChild(inp);
+        const body = new URLSearchParams({
+            nombre:    raw.nombre    || '',
+            empresa:   raw.empresa   || '',
+            email:     raw.email     || '',
+            empleados: raw.empleados || ''
         });
 
-        document.body.appendChild(gform);
-        gform.submit();
-        setTimeout(() => {
-            if (document.body.contains(gform))  document.body.removeChild(gform);
-            if (document.body.contains(iframe)) document.body.removeChild(iframe);
-        }, 4000);
+        fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body })
+            .catch(() => {});
 
         setTimeout(() => showFormSuccess(form), 800);
     }
