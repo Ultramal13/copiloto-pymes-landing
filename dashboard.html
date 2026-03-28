@@ -281,12 +281,77 @@
     ::-webkit-scrollbar { width:4px; height:4px; }
     ::-webkit-scrollbar-track { background:transparent; }
     ::-webkit-scrollbar-thumb { background:var(--border-h); border-radius:10px; }
+
+    /* ─── HAMBURGER ─── */
+    .hamburger { display:none; width:34px; height:34px; border-radius:9px; border:1px solid var(--border); background:transparent; align-items:center; justify-content:center; cursor:pointer; color:var(--muted); flex-shrink:0; }
+    .hamburger:hover { background:var(--bg); color:var(--text); }
+    .sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.45); z-index:99; }
+    .sidebar-overlay.open { display:block; }
+
+    /* ─── RESPONSIVE ─── */
+
+    /* Tablet: 1024px */
+    @media (max-width:1024px) {
+      :root { --sidebar-w: 220px; }
+      .kpi-grid { grid-template-columns:repeat(3,1fr); }
+      .main-grid { grid-template-columns:1fr; }
+      .right-col { flex-direction:row; flex-wrap:wrap; }
+      .right-col > .card { flex:1 1 300px; }
+      .rut-badge { display:none; }
+    }
+
+    /* Tablet pequeña: 768px */
+    @media (max-width:768px) {
+      .sidebar {
+        transform:translateX(-100%);
+        transition:transform 0.28s cubic-bezier(.4,0,.2,1);
+        z-index:200;
+      }
+      .sidebar.open { transform:translateX(0); }
+      .main { margin-left:0; }
+      .hamburger { display:flex; }
+      .content { padding:16px; }
+      .kpi-grid { grid-template-columns:repeat(2,1fr); gap:10px; }
+      .main-grid { grid-template-columns:1fr; }
+      .right-col { flex-direction:column; }
+      .right-col > .card { flex:none; width:100%; }
+      .greeting-bar { flex-direction:column; align-items:flex-start; gap:8px; }
+      .cf-footer { grid-template-columns:repeat(3,1fr); }
+      .cf-foot-val { font-size:14px; }
+      .topbar { padding:0 14px; gap:10px; }
+      .page-breadcrumb { font-size:11px; }
+      .chatbot-panel { width:calc(100vw - 24px); right:12px; }
+      .notif-panel { width:calc(100vw - 28px); right:14px; }
+    }
+
+    /* Mobile: 480px */
+    @media (max-width:480px) {
+      .kpi-grid { grid-template-columns:1fr 1fr; gap:8px; }
+      .kpi-card { padding:14px 12px; }
+      .kpi-value { font-size:22px; }
+      .copiloto-banner { flex-direction:column; gap:10px; }
+      .cb-close { position:absolute; top:12px; right:14px; }
+      .copiloto-banner { position:relative; }
+      .cb-actions { flex-wrap:wrap; }
+      .cb-btn { font-size:11px; padding:5px 11px; }
+      .content { padding:12px; }
+      .kpi-grid { gap:8px; }
+      .labor-item { flex-direction:column; align-items:flex-start; gap:6px; }
+      .cf-bars-wrap { height:70px; }
+      .cf-foot-item { padding:10px 10px; }
+      .topbar { padding:0 12px; gap:8px; }
+      .chatbot-btn { bottom:20px; right:16px; width:48px; height:48px; }
+      .chatbot-panel { bottom:78px; right:8px; width:calc(100vw - 16px); }
+    }
   </style>
 </head>
 <body>
 
+<!-- Sidebar overlay (mobile) -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
 <!-- ═══ SIDEBAR ═══ -->
-<aside class="sidebar">
+<aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <div class="logo-icon">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
@@ -346,6 +411,9 @@
 <!-- ═══ MAIN ═══ -->
 <div class="main">
   <header class="topbar">
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Menú">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
     <div class="topbar-left">
       <div class="page-breadcrumb">Copiloto de Pymes · <span id="page-title">Dashboard</span></div>
     </div>
@@ -831,6 +899,13 @@
   const sections = ['dashboard','alertas','laboral','cashflow','empresa','config'];
   const titles   = {dashboard:'Dashboard',alertas:'Alertas SII',laboral:'Monitor Laboral',cashflow:'Flujo de Caja',empresa:'Mi Empresa',config:'Configuración'};
 
+  function toggleSidebar() {
+    const sb = document.getElementById('sidebar');
+    const ov = document.getElementById('sidebar-overlay');
+    sb.classList.toggle('open');
+    ov.classList.toggle('open');
+  }
+
   function navigate(el) {
     const s = el.dataset.section;
     if (!s) return;
@@ -839,6 +914,8 @@
     sections.forEach(x => document.getElementById('section-' + x).classList.remove('active'));
     document.getElementById('section-' + s).classList.add('active');
     document.getElementById('page-title').textContent = titles[s];
+    // Cierra sidebar en mobile al navegar
+    if (window.innerWidth <= 768) toggleSidebar();
   }
 
   // ─── ALERTS ───
