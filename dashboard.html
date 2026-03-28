@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Copiloto de Pymes — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:        #F1F5F9;
+      --surface:   #FFFFFF;
+      --border:    #E2E8F0;
+      --border-h:  #CBD5E1;
+      --primary:   #00C97A;
+      --primary-d: #00A664;
+      --primary-bg:#F0FDF8;
+      --text:      #0F172A;
+      --muted:     #64748B;
+      --dim:       #94A3B8;
+      --success:   #10B981;
+      --warning:   #F59E0B;
+      --danger:    #EF4444;
+      --info:      #3B82F6;
+      --sidebar-w: 240px;
+      --topbar-h:  64px;
+      --radius:    12px;
+      --shadow:    0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0;
+      z-index: 100;
+    }
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 10px;
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo-icon {
+      width: 36px; height: 36px; border-radius: 9px;
+      background: linear-gradient(135deg, #00C97A, #00A664);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .logo-text { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.2; }
+    .logo-text span { display: block; font-size: 11px; font-weight: 400; color: var(--muted); }
+
+    .sidebar-section { padding: 12px 0; }
+    .sidebar-label {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+      color: var(--dim); text-transform: uppercase;
+      padding: 0 20px 6px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 20px;
+      cursor: pointer;
+      border-radius: 0;
+      font-size: 13.5px; font-weight: 500;
+      color: var(--muted);
+      transition: all 0.15s;
+      position: relative;
+      text-decoration: none;
+      user-select: none;
+    }
+    .nav-item:hover { background: var(--bg); color: var(--text); }
+    .nav-item.active {
+      color: var(--primary-d);
+      background: var(--primary-bg);
+      font-weight: 600;
+    }
+    .nav-item.active::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; border-radius: 0 3px 3px 0;
+      background: var(--primary);
+    }
+    .nav-item .nav-icon { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.7; }
+    .nav-item.active .nav-icon { opacity: 1; }
+    .nav-badge {
+      margin-left: auto;
+      background: var(--danger); color: #fff;
+      font-size: 10px; font-weight: 700;
+      border-radius: 10px; padding: 1px 6px;
+      min-width: 18px; text-align: center;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 14px 16px;
+      border-top: 1px solid var(--border);
+    }
+    .user-card {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .user-card:hover { background: var(--bg); }
+    .user-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, #00C97A22, #00C97A44);
+      border: 2px solid var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; color: var(--primary-d);
+      flex-shrink: 0;
+    }
+    .user-info { flex: 1; min-width: 0; }
+    .user-name { font-size: 12.5px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-role { font-size: 11px; color: var(--muted); }
+
+    /* ─── MAIN LAYOUT ─── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ─── TOPBAR ─── */
+    .topbar {
+      height: var(--topbar-h);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 28px;
+      gap: 16px;
+      position: sticky; top: 0;
+      z-index: 50;
+    }
+    .topbar-title { font-size: 16px; font-weight: 700; color: var(--text); flex: 1; }
+    .topbar-title span { font-weight: 400; color: var(--muted); font-size: 14px; margin-left: 8px; }
+
+    .rut-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--primary-bg);
+      border: 1px solid #BBF7E0;
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 12px; font-weight: 600; color: var(--primary-d);
+      cursor: pointer;
+    }
+    .rut-badge .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--primary);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .topbar-actions { display: flex; align-items: center; gap: 8px; }
+    .icon-btn {
+      width: 36px; height: 36px; border-radius: 9px;
+      border: 1px solid var(--border);
+      background: transparent;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--muted);
+      transition: all 0.15s;
+      position: relative;
+    }
+    .icon-btn:hover { background: var(--bg); color: var(--text); border-color: var(--border-h); }
+    .icon-btn .badge-dot {
+      position: absolute; top: 6px; right: 6px;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--danger);
+      border: 2px solid var(--surface);
+    }
+
+    /* ─── CONTENT ─── */
+    .content { padding: 28px; flex: 1; }
+
+    /* ─── PAGE SECTIONS ─── */
+    .page-section { display: none; }
+    .page-section.active { display: block; }
+
+    /* GREETING */
+    .greeting-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+    }
+    .greeting-text h1 { font-size: 22px; font-weight: 700; color: var(--text); }
+    .greeting-text p  { font-size: 13.5px; color: var(--muted); margin-top: 2px; }
+    .periodo-selector {
+      display: flex; align-items: center; gap: 6px;
+      border: 1px solid var(--border);
+      border-radius: 9px; padding: 7px 14px;
+      font-size: 13px; font-weight: 500; color: var(--muted);
+      background: var(--surface); cursor: pointer;
+    }
+
+    /* STATUS BANNER */
+    .status-banner {
+      border-radius: var(--radius);
+      padding: 14px 20px;
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 24px;
+      border: 1px solid;
+    }
+    .status-banner.ok    { background: #F0FDF8; border-color: #BBF7E0; }
+    .status-banner.warn  { background: #FFFBEB; border-color: #FDE68A; }
+    .status-banner.alert { background: #FEF2F2; border-color: #FECACA; }
+    .status-banner .sb-icon {
+      width: 36px; height: 36px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .status-banner.ok   .sb-icon { background: #DCFCE7; }
+    .status-banner.warn .sb-icon { background: #FEF9C3; }
+    .status-banner.alert .sb-icon { background: #FEE2E2; }
+    .sb-content { flex: 1; }
+    .sb-content strong { font-size: 14px; font-weight: 600; }
+    .sb-content p { font-size: 12.5px; color: var(--muted); margin-top: 1px; }
+    .sb-action {
+      font-size: 12.5px; font-weight: 600; color: var(--primary-d);
+      background: none; border: 1px solid var(--primary);
+      border-radius: 7px; padding: 6px 14px;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .sb-action:hover { background: var(--primary-bg); }
+
+    /* KPI GRID */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.2s, transform 0.2s;
+      cursor: default;
+    }
+    .kpi-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+    .kpi-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .kpi-label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .kpi-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .kpi-icon.green { background: #DCFCE7; }
+    .kpi-icon.yellow { background: #FEF9C3; }
+    .kpi-icon.red { background: #FEE2E2; }
+    .kpi-icon.blue { background: #EFF6FF; }
+    .kpi-value { font-size: 28px; font-weight: 800; color: var(--text); line-height: 1; }
+    .kpi-value.ok     { color: var(--success); }
+    .kpi-value.warn   { color: var(--warning); }
+    .kpi-value.danger { color: var(--danger); }
+    .kpi-sub { font-size: 12px; color: var(--muted); margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+    .kpi-sub .tag {
+      font-size: 10.5px; font-weight: 600; border-radius: 5px; padding: 1px 6px;
+    }
+    .tag-ok     { background: #DCFCE7; color: #166534; }
+    .tag-warn   { background: #FEF9C3; color: #854D0E; }
+    .tag-danger { background: #FEE2E2; color: #991B1B; }
+    .tag-info   { background: #EFF6FF; color: #1D4ED8; }
+
+    /* MAIN GRID */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    /* CARD */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .card-title { font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .card-action {
+      font-size: 12px; font-weight: 600; color: var(--primary-d);
+      background: none; border: none; cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .card-action:hover { opacity: 0.7; }
+
+    /* ALERT ITEMS */
+    .alert-list { padding: 8px 0; }
+    .alert-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.15s;
+      position: relative;
+    }
+    .alert-item:last-child { border-bottom: none; }
+    .alert-item:hover { background: var(--bg); }
+    .alert-item.done { opacity: 0.45; }
+    .alert-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      flex-shrink: 0; margin-top: 4px;
+    }
+    .alert-dot.red    { background: var(--danger); box-shadow: 0 0 0 3px #FEE2E2; }
+    .alert-dot.yellow { background: var(--warning); box-shadow: 0 0 0 3px #FEF9C3; }
+    .alert-dot.green  { background: var(--success); box-shadow: 0 0 0 3px #DCFCE7; }
+    .alert-dot.blue   { background: var(--info); box-shadow: 0 0 0 3px #EFF6FF; }
+    .alert-body { flex: 1; min-width: 0; }
+    .alert-name { font-size: 13.5px; font-weight: 600; color: var(--text); }
+    .alert-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .alert-meta { display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+    .days-badge {
+      font-size: 11px; font-weight: 700; border-radius: 6px; padding: 2px 8px;
+    }
+    .days-badge.urgent { background: #FEE2E2; color: #991B1B; }
+    .days-badge.soon   { background: #FEF9C3; color: #854D0E; }
+    .days-badge.ok     { background: #DCFCE7; color: #166534; }
+    .alert-amount { font-size: 12px; font-weight: 600; color: var(--muted); }
+    .alert-check {
+      width: 22px; height: 22px; border-radius: 50%;
+      border: 1.5px solid var(--border-h);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .alert-check:hover { border-color: var(--primary); background: var(--primary-bg); }
+    .alert-item.done .alert-check {
+      background: var(--primary); border-color: var(--primary);
+    }
+
+    /* EXPANDED ALERT DETAIL */
+    .alert-detail {
+      display: none;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 12px 20px 12px 42px;
+    }
+    .alert-detail.open { display: block; }
+    .detail-row { display: flex; justify-content: space-between; font-size: 12.5px; margin-bottom: 6px; }
+    .detail-row span:first-child { color: var(--muted); }
+    .detail-row span:last-child  { font-weight: 600; color: var(--text); }
+    .detail-actions { display: flex; gap: 8px; margin-top: 10px; }
+    .btn-sm {
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 7px;
+      cursor: pointer; border: none; transition: all 0.15s;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-d); }
+    .btn-ghost { background: var(--surface); border: 1px solid var(--border); color: var(--muted); }
+    .btn-ghost:hover { border-color: var(--border-h); color: var(--text); }
+
+    /* RESUMEN LABORAL */
+    .labor-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .labor-item:last-child { border-bottom: none; }
+    .labor-name { font-size: 13px; font-weight: 500; color: var(--text); }
+    .labor-sub  { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+    .status-pill {
+      font-size: 11px; font-weight: 700; border-radius: 20px; padding: 3px 10px;
+    }
+    .pill-ok     { background: #DCFCE7; color: #166534; }
+    .pill-warn   { background: #FEF9C3; color: #854D0E; }
+    .pill-danger { background: #FEE2E2; color: #991B1B; }
+    .pill-info   { background: #EFF6FF; color: #1D4ED8; }
+
+    /* CASHFLOW */
+    .cashflow-card { margin-bottom: 20px; }
+    .cf-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+    }
+    .cf-month { padding: 16px 20px; border-right: 1px solid var(--border); }
+    .cf-month:last-child { border-right: none; }
+    .cf-month-name { font-size: 11.5px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+    .cf-bars { display: flex; align-items: flex-end; gap: 6px; height: 70px; }
+    .cf-bar {
+      flex: 1; border-radius: 4px 4px 0 0;
+      transition: opacity 0.2s;
+      position: relative;
+    }
+    .cf-bar:hover { opacity: 0.8; }
+    .cf-bar.income  { background: linear-gradient(to top, #00C97A, #34D399); }
+    .cf-bar.expense { background: linear-gradient(to top, #94A3B8, #CBD5E1); }
+    .cf-bar.projected { background: linear-gradient(to top, #BBF7E0, #D1FAE5); border: 2px dashed #00C97A; }
+    .cf-legend { display: flex; gap: 14px; margin-top: 8px; }
+    .cf-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--muted); }
+    .cf-dot { width: 8px; height: 8px; border-radius: 2px; }
+    .cf-totals { display: flex; justify-content: space-between; padding: 12px 20px; border-top: 1px solid var(--border); }
+    .cf-total-item { text-align: center; }
+    .cf-total-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .cf-total-value { font-size: 18px; font-weight: 800; margin-top: 3px; }
+    .cf-total-value.positive { color: var(--success); }
+    .cf-total-value.negative { color: var(--danger); }
+    .cf-total-value.neutral  { color: var(--text); }
+
+    /* NOTIFICATION PANEL */
+    .notif-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      display: none;
+    }
+    .notif-overlay.open { display: block; }
+    .notif-bg { position: absolute; inset: 0; }
+    .notif-panel {
+      position: absolute; top: 64px; right: 16px;
+      width: 360px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+    .notif-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .notif-header h3 { font-size: 14px; font-weight: 700; }
+    .notif-header button { background: none; border: none; font-size: 12px; font-weight: 600; color: var(--primary-d); cursor: pointer; }
+    .notif-list { max-height: 420px; overflow-y: auto; }
+    .notif-item { display: flex; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; }
+    .notif-item:hover { background: var(--bg); }
+    .notif-item:last-child { border-bottom: none; }
+    .notif-item.unread { background: #F0FDF8; }
+    .notif-ico { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .notif-ico.green { background: #DCFCE7; }
+    .notif-ico.yellow { background: #FEF9C3; }
+    .notif-ico.red { background: #FEE2E2; }
+    .notif-ico.blue { background: #EFF6FF; }
+    .notif-body h4 { font-size: 13px; font-weight: 600; color: var(--text); }
+    .notif-body p  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .notif-time { font-size: 11px; color: var(--dim); margin-top: 4px; }
+
+    /* EMPTY OTHER SECTIONS */
+    .coming-soon {
+      text-align: center; padding: 80px 40px;
+      color: var(--muted);
+    }
+    .coming-soon .cs-icon {
+      width: 64px; height: 64px; border-radius: 16px;
+      background: var(--bg); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .coming-soon h3 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .coming-soon p  { font-size: 14px; max-width: 380px; margin: 0 auto; line-height: 1.6; }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-h); border-radius: 10px; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     SIDEBAR
+════════════════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+        <path d="M2 17l10 5 10-5"/>
+        <path d="M2 12l10 5 10-5"/>
+      </svg>
+    </div>
+    <div class="logo-text">Copiloto de Pymes <span>Panel de control</span></div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Principal</div>
+    <div class="nav-item active" data-section="dashboard" onclick="navigate(this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </div>
+    <div class="nav-item" data-section="alertas" onclick="navigate(this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      Alertas SII
+      <span class="nav-badge">3</span>
+    </div>
+    <div class="nav-item" data-section="laboral" onclick="navigate(this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Monitor Laboral
+    </div>
+    <div class="nav-item" data-section="cashflow" onclick="navigate(this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Flujo de Caja
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Empresa</div>
+    <div class="nav-item" data-section="empresa" onclick="navigate(this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8a2 2 0 0 0-2 2v2h12V5a2 2 0 0 0-2-2z"/></svg>
+      Mi Empresa
+    </div>
+    <div class="nav-item" data-section="config" onclick="navigate(this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Configuración
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="user-card" onclick="toggleUserMenu()">
+      <div class="user-avatar">CH</div>
+      <div class="user-info">
+        <div class="user-name">Cristian Huerta</div>
+        <div class="user-role">Administrador</div>
+      </div>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══════════════════════════════════════════
+     MAIN
+════════════════════════════════════════════ -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-title">
+      <span id="page-title">Dashboard</span>
+    </div>
+
+    <div class="rut-badge" title="RUT conectado al SII">
+      <span class="dot"></span>
+      76.543.210-K · Comercial Los Andes SpA
+    </div>
+
+    <div class="topbar-actions">
+      <button class="icon-btn" onclick="toggleNotif()" title="Notificaciones" id="notif-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="badge-dot"></span>
+      </button>
+      <button class="icon-btn" title="Ayuda">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ═══ SECTION: DASHBOARD ═══ -->
+    <div id="section-dashboard" class="page-section active">
+
+      <div class="greeting-bar">
+        <div class="greeting-text">
+          <h1 id="greeting-msg">Buenos días, Cristian 👋</h1>
+          <p id="greeting-sub">Aquí está el resumen tributario y laboral de tu empresa al día de hoy.</p>
+        </div>
+        <div class="periodo-selector">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Marzo 2026
+        </div>
+      </div>
+
+      <!-- STATUS BANNER -->
+      <div class="status-banner warn">
+        <div class="sb-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div class="sb-content">
+          <strong style="color:#92400E">Tienes 3 vencimientos en los próximos 25 días</strong>
+          <p>El más urgente es la declaración de cotizaciones previsionales — vence en 16 días.</p>
+        </div>
+        <button class="sb-action" onclick="navigate(document.querySelector('[data-section=alertas]'))">Ver alertas →</button>
+      </div>
+
+      <!-- KPI CARDS -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <div class="kpi-label">Estado Tributario</div>
+            <div class="kpi-icon green">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </div>
+          <div class="kpi-value ok">Al día</div>
+          <div class="kpi-sub"><span class="tag tag-ok">SII</span> Sin deudas registradas</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <div class="kpi-label">Próximo vencimiento</div>
+            <div class="kpi-icon yellow">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+          </div>
+          <div class="kpi-value warn">16 días</div>
+          <div class="kpi-sub"><span class="tag tag-warn">AFP</span> Cotizaciones — 13 Abr</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <div class="kpi-label">Declaraciones pendientes</div>
+            <div class="kpi-icon red">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </div>
+          </div>
+          <div class="kpi-value" style="color:var(--text)">3</div>
+          <div class="kpi-sub"><span class="tag tag-warn">IVA · AFP · PPM</span></div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <div class="kpi-label">Trabajadores activos</div>
+            <div class="kpi-icon blue">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+          </div>
+          <div class="kpi-value" style="color:var(--text)">8</div>
+          <div class="kpi-sub"><span class="tag tag-ok">Laboral</span> Sin anomalías</div>
+        </div>
+      </div>
+
+      <!-- MAIN GRID -->
+      <div class="main-grid">
+
+        <!-- LEFT: ALERTAS -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              Vencimientos próximos
+            </div>
+            <button class="card-action">Ver todos →</button>
+          </div>
+          <div class="alert-list">
+
+            <!-- Alert 1 -->
+            <div class="alert-item" id="al-1" onclick="toggleAlert('al-1')">
+              <div class="alert-dot yellow"></div>
+              <div class="alert-body">
+                <div class="alert-name">Cotizaciones previsionales</div>
+                <div class="alert-desc">AFP + Isapre/Fonasa — Período Marzo 2026</div>
+                <div class="alert-meta">
+                  <span class="days-badge soon">En 16 días — 13 Abr</span>
+                  <span class="alert-amount">~$2.340.000</span>
+                </div>
+              </div>
+              <div class="alert-check" onclick="toggleDone(event, 'al-1')" title="Marcar como gestionado">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+            </div>
+            <div class="alert-detail" id="detail-al-1">
+              <div class="detail-row"><span>Tipo</span><span>Cotizaciones previsionales y de salud</span></div>
+              <div class="detail-row"><span>Período</span><span>Marzo 2026</span></div>
+              <div class="detail-row"><span>Trabajadores</span><span>8 activos</span></div>
+              <div class="detail-row"><span>Monto estimado</span><span>$2.340.000</span></div>
+              <div class="detail-row"><span>Plazo máximo</span><span>13 de Abril, 2026</span></div>
+              <div class="detail-actions">
+                <button class="btn-sm btn-primary">Ir a PreviRed</button>
+                <button class="btn-sm btn-ghost">Agregar recordatorio</button>
+              </div>
+            </div>
+
+            <!-- Alert 2 -->
+            <div class="alert-item" id="al-2" onclick="toggleAlert('al-2')">
+              <div class="alert-dot yellow"></div>
+              <div class="alert-body">
+                <div class="alert-name">Formulario 29 — IVA</div>
+                <div class="alert-desc">Declaración mensual de IVA — Período Marzo 2026</div>
+                <div class="alert-meta">
+                  <span class="days-badge soon">En 23 días — 20 Abr</span>
+                  <span class="alert-amount">~$1.820.000</span>
+                </div>
+              </div>
+              <div class="alert-check" onclick="toggleDone(event, 'al-2')" title="Marcar como gestionado">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+            </div>
+            <div class="alert-detail" id="detail-al-2">
+              <div class="detail-row"><span>Formulario</span><span>F29 — Declaración y Pago Mensual</span></div>
+              <div class="detail-row"><span>Período</span><span>Marzo 2026</span></div>
+              <div class="detail-row"><span>IVA débito</span><span>$3.240.000</span></div>
+              <div class="detail-row"><span>IVA crédito</span><span>$1.420.000</span></div>
+              <div class="detail-row"><span>IVA a pagar</span><span style="color:var(--danger);font-weight:800">$1.820.000</span></div>
+              <div class="detail-actions">
+                <button class="btn-sm btn-primary">Ir al SII</button>
+                <button class="btn-sm btn-ghost">Ver detalle</button>
+              </div>
+            </div>
+
+            <!-- Alert 3 -->
+            <div class="alert-item" id="al-3" onclick="toggleAlert('al-3')">
+              <div class="alert-dot yellow"></div>
+              <div class="alert-body">
+                <div class="alert-name">PPM — Pagos Provisionales Mensuales</div>
+                <div class="alert-desc">Formulario 29 sección PPM — Período Marzo 2026</div>
+                <div class="alert-meta">
+                  <span class="days-badge soon">En 23 días — 20 Abr</span>
+                  <span class="alert-amount">~$380.000</span>
+                </div>
+              </div>
+              <div class="alert-check" onclick="toggleDone(event, 'al-3')" title="Marcar como gestionado">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+            </div>
+            <div class="alert-detail" id="detail-al-3">
+              <div class="detail-row"><span>Tipo</span><span>Pago Provisional Mensual (PPM)</span></div>
+              <div class="detail-row"><span>Tasa aplicada</span><span>1.5% sobre ventas brutas</span></div>
+              <div class="detail-row"><span>Ventas del período</span><span>$25.300.000</span></div>
+              <div class="detail-row"><span>PPM calculado</span><span style="color:var(--danger);font-weight:800">$379.500</span></div>
+              <div class="detail-actions">
+                <button class="btn-sm btn-primary">Ir al SII</button>
+                <button class="btn-sm btn-ghost">Ver historial</button>
+              </div>
+            </div>
+
+            <!-- Alert 4 — Done -->
+            <div class="alert-item done" id="al-4" onclick="toggleAlert('al-4')">
+              <div class="alert-dot green"></div>
+              <div class="alert-body">
+                <div class="alert-name">Gratificaciones legales</div>
+                <div class="alert-desc">Pago mensual a trabajadores — Marzo 2026</div>
+                <div class="alert-meta">
+                  <span class="days-badge ok">Pagado el 28 Mar</span>
+                  <span class="alert-amount">$1.240.000</span>
+                </div>
+              </div>
+              <div class="alert-check" onclick="toggleDone(event, 'al-4')" title="Marcar como pendiente" style="background:var(--primary);border-color:var(--primary)">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+            </div>
+            <div class="alert-detail" id="detail-al-4">
+              <div class="detail-row"><span>Tipo</span><span>Gratificación legal mensual (proporcional)</span></div>
+              <div class="detail-row"><span>Período</span><span>Marzo 2026</span></div>
+              <div class="detail-row"><span>Trabajadores</span><span>8</span></div>
+              <div class="detail-row"><span>Total pagado</span><span style="color:var(--success);font-weight:800">$1.240.000</span></div>
+              <div class="detail-row"><span>Fecha pago</span><span>28 Marzo 2026</span></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- RIGHT: LABORAL -->
+        <div style="display:flex; flex-direction:column; gap:20px;">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Monitor Laboral
+              </div>
+              <button class="card-action">Ver →</button>
+            </div>
+            <div>
+              <div class="labor-item">
+                <div><div class="labor-name">Contratos vigentes</div><div class="labor-sub">8 trabajadores activos</div></div>
+                <span class="status-pill pill-ok">Al día</span>
+              </div>
+              <div class="labor-item">
+                <div><div class="labor-name">Liquidaciones</div><div class="labor-sub">Marzo 2026 — emitidas</div></div>
+                <span class="status-pill pill-ok">Completo</span>
+              </div>
+              <div class="labor-item">
+                <div><div class="labor-name">AFP</div><div class="labor-sub">Próximo pago: 13 Abr</div></div>
+                <span class="status-pill pill-warn">Pendiente</span>
+              </div>
+              <div class="labor-item">
+                <div><div class="labor-name">Salud (Isapre/Fonasa)</div><div class="labor-sub">Próximo pago: 13 Abr</div></div>
+                <span class="status-pill pill-warn">Pendiente</span>
+              </div>
+              <div class="labor-item">
+                <div><div class="labor-name">Seguro de Cesantía</div><div class="labor-sub">AFC Chile — Marzo</div></div>
+                <span class="status-pill pill-ok">Al día</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- EMPRESA INFO -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8a2 2 0 0 0-2 2v2h12V5a2 2 0 0 0-2-2z"/></svg>
+                Mi Empresa
+              </div>
+            </div>
+            <div style="padding:16px 20px; display:flex; flex-direction:column; gap:10px;">
+              <div style="display:flex;justify-content:space-between;font-size:13px;">
+                <span style="color:var(--muted)">Razón social</span>
+                <span style="font-weight:600">Comercial Los Andes SpA</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;">
+                <span style="color:var(--muted)">RUT</span>
+                <span style="font-weight:600">76.543.210-K</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;">
+                <span style="color:var(--muted)">Giro</span>
+                <span style="font-weight:600;text-align:right;max-width:160px">Comercio al por menor</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;">
+                <span style="color:var(--muted)">Régimen tributario</span>
+                <span style="font-weight:600">14D — Pro Pyme</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;">
+                <span style="color:var(--muted)">Estado SII</span>
+                <span class="status-pill pill-ok">Activo</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CASHFLOW -->
+      <div class="card cashflow-card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Proyección de Flujo de Caja
+            <span style="font-size:11px;font-weight:500;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:2px 8px">IA · estimado</span>
+          </div>
+          <button class="card-action">Ver análisis completo →</button>
+        </div>
+        <div class="cf-grid">
+          <!-- Enero -->
+          <div class="cf-month">
+            <div class="cf-month-name">Enero 2026</div>
+            <div class="cf-bars">
+              <div class="cf-bar income"   style="height:72%" title="Ingresos $21.4M"></div>
+              <div class="cf-bar expense"  style="height:58%" title="Egresos $17.2M"></div>
+            </div>
+            <div class="cf-legend">
+              <div class="cf-legend-item"><div class="cf-dot" style="background:#00C97A"></div>Ing.</div>
+              <div class="cf-legend-item"><div class="cf-dot" style="background:#CBD5E1"></div>Eg.</div>
+            </div>
+          </div>
+          <!-- Febrero -->
+          <div class="cf-month">
+            <div class="cf-month-name">Febrero 2026</div>
+            <div class="cf-bars">
+              <div class="cf-bar income"   style="height:65%" title="Ingresos $19.2M"></div>
+              <div class="cf-bar expense"  style="height:70%" title="Egresos $20.7M"></div>
+            </div>
+            <div class="cf-legend">
+              <div class="cf-legend-item"><div class="cf-dot" style="background:#00C97A"></div>Ing.</div>
+              <div class="cf-legend-item"><div class="cf-dot" style="background:#CBD5E1"></div>Eg.</div>
+            </div>
+          </div>
+          <!-- Marzo (actual) -->
+          <div class="cf-month" style="background:#F8FAFC;border-radius:0 0 var(--radius) 0;">
+            <div class="cf-month-name">Marzo 2026 <span style="color:var(--primary);font-size:10px">· actual</span></div>
+            <div class="cf-bars">
+              <div class="cf-bar income"    style="height:84%" title="Ingresos $25.3M"></div>
+              <div class="cf-bar expense"   style="height:62%" title="Egresos $18.6M"></div>
+              <div class="cf-bar projected" style="height:78%" title="Proyección $23.5M (IA)"></div>
+            </div>
+            <div class="cf-legend">
+              <div class="cf-legend-item"><div class="cf-dot" style="background:#00C97A"></div>Ing.</div>
+              <div class="cf-legend-item"><div class="cf-dot" style="background:#CBD5E1"></div>Eg.</div>
+              <div class="cf-legend-item"><div class="cf-dot" style="background:#BBF7E0;border:1.5px dashed #00C97A"></div>Proy.</div>
+            </div>
+          </div>
+        </div>
+        <div class="cf-totals">
+          <div class="cf-total-item">
+            <div class="cf-total-label">Ingresos Marzo</div>
+            <div class="cf-total-value positive">$25.300.000</div>
+          </div>
+          <div class="cf-total-item">
+            <div class="cf-total-label">Egresos Marzo</div>
+            <div class="cf-total-value negative">$18.600.000</div>
+          </div>
+          <div class="cf-total-item">
+            <div class="cf-total-label">Saldo neto</div>
+            <div class="cf-total-value positive">$6.700.000</div>
+          </div>
+          <div class="cf-total-item">
+            <div class="cf-total-label">Proyección IA — Abril</div>
+            <div class="cf-total-value neutral">$23.500.000</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /section-dashboard -->
+
+
+    <!-- ═══ SECTION: ALERTAS ═══ -->
+    <div id="section-alertas" class="page-section">
+      <div class="coming-soon">
+        <div class="cs-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <h3>Alertas SII</h3>
+        <p>Vista detallada de todas las obligaciones tributarias, historial de declaraciones y estado en tiempo real con el SII. <strong>Próximamente.</strong></p>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION: LABORAL ═══ -->
+    <div id="section-laboral" class="page-section">
+      <div class="coming-soon">
+        <div class="cs-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        </div>
+        <h3>Monitor Laboral</h3>
+        <p>Gestión de contratos, liquidaciones de sueldo, AFP, salud y seguro de cesantía de todos tus trabajadores. <strong>Próximamente.</strong></p>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION: CASHFLOW ═══ -->
+    <div id="section-cashflow" class="page-section">
+      <div class="coming-soon">
+        <div class="cs-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3>Flujo de Caja con IA</h3>
+        <p>Proyecciones inteligentes basadas en tu historial tributario, ventas y patrones de gasto. Detecta riesgos de liquidez antes de que ocurran. <strong>Próximamente.</strong></p>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION: EMPRESA ═══ -->
+    <div id="section-empresa" class="page-section">
+      <div class="coming-soon">
+        <div class="cs-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8a2 2 0 0 0-2 2v2h12V5a2 2 0 0 0-2-2z"/></svg>
+        </div>
+        <h3>Mi Empresa</h3>
+        <p>Información completa de tu empresa, gestión de múltiples RUTs, usuarios y permisos. <strong>Próximamente.</strong></p>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION: CONFIG ═══ -->
+    <div id="section-config" class="page-section">
+      <div class="coming-soon">
+        <div class="cs-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </div>
+        <h3>Configuración</h3>
+        <p>Alertas personalizadas, integraciones bancarias, usuarios del equipo y preferencias de notificación. <strong>Próximamente.</strong></p>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+
+<!-- ═══════════════════════════════════════════
+     NOTIFICATION PANEL
+════════════════════════════════════════════ -->
+<div class="notif-overlay" id="notif-overlay" onclick="closeNotifOnBg(event)">
+  <div class="notif-bg"></div>
+  <div class="notif-panel">
+    <div class="notif-header">
+      <h3>Notificaciones</h3>
+      <button onclick="markAllRead()">Marcar todas como leídas</button>
+    </div>
+    <div class="notif-list">
+      <div class="notif-item unread">
+        <div class="notif-ico yellow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div class="notif-body">
+          <h4>Cotizaciones — 16 días para vencer</h4>
+          <p>Recuerda pagar AFP e Isapre antes del 13 de Abril.</p>
+          <div class="notif-time">Hace 2 horas</div>
+        </div>
+      </div>
+      <div class="notif-item unread">
+        <div class="notif-ico yellow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+        </div>
+        <div class="notif-body">
+          <h4>F29 — Declaración IVA en 23 días</h4>
+          <p>Monto estimado a pagar: $1.820.000</p>
+          <div class="notif-time">Hace 5 horas</div>
+        </div>
+      </div>
+      <div class="notif-item unread">
+        <div class="notif-ico blue">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="notif-body">
+          <h4>Proyección IA actualizada</h4>
+          <p>Abril 2026: ingresos estimados $23.5M según tendencia.</p>
+          <div class="notif-time">Ayer</div>
+        </div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-ico green">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="notif-body">
+          <h4>Gratificaciones pagadas</h4>
+          <p>El pago de $1.240.000 fue registrado exitosamente.</p>
+          <div class="notif-time">28 Mar, 10:30</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ─── NAVIGATION ───
+  const sections = ['dashboard','alertas','laboral','cashflow','empresa','config'];
+  const titles   = { dashboard:'Dashboard', alertas:'Alertas SII', laboral:'Monitor Laboral', cashflow:'Flujo de Caja', empresa:'Mi Empresa', config:'Configuración' };
+
+  function navigate(el) {
+    const section = el.dataset.section;
+    if (!section) return;
+
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+
+    sections.forEach(s => {
+      document.getElementById('section-' + s).classList.remove('active');
+    });
+    document.getElementById('section-' + section).classList.add('active');
+    document.getElementById('page-title').textContent = titles[section];
+  }
+
+  // ─── ALERT EXPAND ───
+  function toggleAlert(id) {
+    const detail = document.getElementById('detail-' + id);
+    const isOpen = detail.classList.contains('open');
+    document.querySelectorAll('.alert-detail').forEach(d => d.classList.remove('open'));
+    if (!isOpen) detail.classList.add('open');
+  }
+
+  // ─── MARK DONE ───
+  function toggleDone(event, id) {
+    event.stopPropagation();
+    const item = document.getElementById(id);
+    item.classList.toggle('done');
+  }
+
+  // ─── NOTIFICATIONS ───
+  function toggleNotif() {
+    document.getElementById('notif-overlay').classList.toggle('open');
+  }
+  function closeNotifOnBg(e) {
+    if (e.target === document.querySelector('.notif-bg')) {
+      document.getElementById('notif-overlay').classList.remove('open');
+    }
+  }
+  function markAllRead() {
+    document.querySelectorAll('.notif-item').forEach(n => n.classList.remove('unread'));
+    document.querySelector('.badge-dot').style.display = 'none';
+  }
+
+  // ─── GREETING ───
+  function setGreeting() {
+    const h = new Date().getHours();
+    const msg = h < 12 ? 'Buenos días' : h < 19 ? 'Buenas tardes' : 'Buenas noches';
+    document.getElementById('greeting-msg').textContent = msg + ', Cristian 👋';
+  }
+  setGreeting();
+</script>
+</body>
+</html>
