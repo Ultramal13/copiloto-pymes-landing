@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copiloto de Pymes — Tu escudo tributario y laboral con IA</title>
+    <meta name="description" content="IA que monitorea tu cumplimiento tributario y laboral. Alertas 30 días antes de cada vencimiento. Protege tu empresa del SII. Desde gratis.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #16A34A;
+            --primary-hover: #15803D;
+            --primary-light: #DCFCE7;
+            --secondary: #1E40AF;
+            --dark: #0F172A;
+            --text: #1E293B;
+            --muted: #64748B;
+            --border: #E2E8F0;
+            --bg: #FFFFFF;
+            --bg-alt: #F8FAFC;
+            --danger: #DC2626;
+            --warning: #D97706;
+            --radius: 12px;
+            --shadow: 0 4px 24px rgba(0,0,0,0.08);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.12);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* NAV */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 0;
+            transition: box-shadow 0.3s;
+        }
+        nav.scrolled { box-shadow: var(--shadow); }
+        .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 800; font-size: 18px; color: var(--dark); }
+        .logo-icon { width: 34px; height: 34px; background: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+        .nav-links { display: flex; gap: 28px; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--dark); }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 12px 22px; border-radius: 8px; font-size: 14px; font-weight: 600;
+            text-decoration: none; cursor: pointer; border: none;
+            transition: all 0.2s; white-space: nowrap; font-family: inherit;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(22,163,74,0.3); }
+        .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); }
+        .btn-lg { padding: 16px 32px; font-size: 16px; border-radius: 10px; }
+        .btn-full { width: 100%; display: flex; }
+
+        /* HERO */
+        #hero { padding: 72px 0 80px; overflow: hidden; background: linear-gradient(180deg, #F0FDF4 0%, #FFFFFF 60%); }
+        .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--primary-light); color: var(--primary-hover);
+            padding: 6px 14px; border-radius: 100px; font-size: 13px; font-weight: 600; margin-bottom: 24px;
+        }
+        .hero-badge-dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; animation: pulse-dot 2s infinite; }
+        @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
+        h1 { font-size: clamp(36px, 4.5vw, 58px); font-weight: 900; line-height: 1.1; letter-spacing: -0.025em; color: var(--dark); margin-bottom: 20px; }
+        h1 .hi { color: var(--primary); }
+        .hero-sub { font-size: 17px; color: var(--muted); margin-bottom: 36px; line-height: 1.75; }
+        .hero-form { display: flex; flex-direction: column; gap: 10px; max-width: 460px; }
+        .hero-form input, .hero-form select {
+            padding: 13px 16px; border: 2px solid var(--border); border-radius: 8px;
+            font-size: 15px; font-family: inherit; transition: border-color 0.2s; outline: none; background: white; color: var(--text);
+        }
+        .hero-form input:focus, .hero-form select:focus { border-color: var(--primary); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .hero-trust { display: flex; align-items: center; gap: 20px; margin-top: 16px; flex-wrap: wrap; }
+        .trust-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); }
+        .trust-check { color: var(--primary); font-weight: 700; }
+
+        /* MOCKUP */
+        .hero-visual { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+        .dashboard-mock { background: white; border-radius: 16px; box-shadow: 0 32px 80px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05); overflow: hidden; }
+        .mock-bar { background: var(--dark); padding: 12px 16px; display: flex; align-items: center; gap: 10px; }
+        .dots { display: flex; gap: 5px; }
+        .dot { width: 11px; height: 11px; border-radius: 50%; }
+        .dot.r{background:#FF5F57} .dot.y{background:#FEBC2E} .dot.g{background:#28C840}
+        .mock-url { flex: 1; background: rgba(255,255,255,0.1); border-radius: 5px; padding: 4px 10px; font-size: 11px; color: rgba(255,255,255,0.45); }
+        .mock-body { padding: 20px; }
+        .mock-hi { font-size: 12px; color: var(--muted); margin-bottom: 2px; }
+        .mock-title-text { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 16px; }
+        .semaforo { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 16px; }
+        .sf { border-radius: 8px; padding: 12px 8px; text-align: center; }
+        .sf.v{background:#DCFCE7} .sf.a{background:#FEF9C3} .sf.r{background:#FEE2E2}
+        .sf-dot { width: 24px; height: 24px; border-radius: 50%; margin: 0 auto 6px; }
+        .sf.v .sf-dot{background:#16A34A} .sf.a .sf-dot{background:#CA8A04} .sf.r .sf-dot{background:#DC2626}
+        .sf-lbl { font-size: 10px; font-weight: 600; color: var(--text); }
+        .sf-val { font-size: 13px; font-weight: 800; margin-top: 2px; }
+        .sf.v .sf-val{color:#16A34A} .sf.a .sf-val{color:#CA8A04} .sf.r .sf-val{color:#DC2626}
+        .alerts { display: flex; flex-direction: column; gap: 6px; }
+        .al { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 8px; border: 1px solid var(--border); }
+        .al-ic { width: 32px; height: 32px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+        .al-ic.w{background:#FEF9C3} .al-ic.d{background:#FEE2E2} .al-ic.ok{background:#DCFCE7}
+        .al-info { flex: 1; }
+        .al-t { font-size: 12px; font-weight: 600; color: var(--dark); }
+        .al-d { font-size: 10px; color: var(--muted); }
+        .al-badge { font-size: 10px; font-weight: 700; padding: 3px 7px; border-radius: 5px; white-space: nowrap; }
+        .al-badge.w{background:#FEF9C3;color:#92400E} .al-badge.d{background:#FEE2E2;color:#991B1B} .al-badge.ok{background:#DCFCE7;color:#166534}
+
+        /* STATS */
+        #stats { background: var(--dark); padding: 48px 0; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 32px; text-align: center; }
+        .stat-n { font-size: 38px; font-weight: 900; color: var(--primary); letter-spacing: -0.02em; }
+        .stat-l { font-size: 13px; color: rgba(255,255,255,0.55); margin-top: 4px; line-height: 1.4; }
+
+        /* SECTIONS */
+        .section { padding: 96px 0; }
+        .section.alt { background: var(--bg-alt); }
+        .section-tag {
+            display: inline-block; background: var(--primary-light); color: var(--primary-hover);
+            padding: 5px 14px; border-radius: 100px; font-size: 12px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px;
+        }
+        h2 { font-size: clamp(28px, 3.5vw, 44px); font-weight: 800; line-height: 1.2; color: var(--dark); letter-spacing: -0.02em; }
+        h2 .red { color: var(--danger); }
+        .section-sub { font-size: 17px; color: var(--muted); margin-top: 14px; max-width: 580px; line-height: 1.75; }
+        .center { text-align: center; }
+        .center .section-sub { margin: 14px auto 0; }
+
+        /* PAIN */
+        .pain-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; margin-top: 56px; }
+        .pain-card { background: white; border-radius: var(--radius); padding: 32px; border: 1px solid var(--border); transition: all 0.25s; }
+        .pain-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+        .pain-emoji { font-size: 36px; margin-bottom: 14px; display: block; }
+        .pain-amt { font-size: 34px; font-weight: 900; color: var(--danger); letter-spacing: -0.02em; }
+        .pain-lbl { font-size: 13px; color: var(--muted); font-weight: 500; margin-top: 2px; }
+        .pain-desc { font-size: 15px; color: var(--text); margin-top: 14px; line-height: 1.65; }
+
+        /* FEATURES */
+        .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 28px; margin-top: 56px; }
+        .feat { padding: 32px; border-radius: var(--radius); border: 1px solid var(--border); position: relative; overflow: hidden; transition: all 0.25s; }
+        .feat::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+        .feat.trib::before { background: var(--primary); }
+        .feat.lab::before { background: var(--secondary); }
+        .feat.cash::before { background: #7C3AED; }
+        .feat:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+        .feat-icon { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; font-size: 22px; }
+        .trib .feat-icon{background:#DCFCE7} .lab .feat-icon{background:#DBEAFE} .cash .feat-icon{background:#EDE9FE}
+        .feat-title { font-size: 19px; font-weight: 700; color: var(--dark); margin-bottom: 10px; }
+        .feat-desc { font-size: 14px; color: var(--muted); line-height: 1.65; }
+        .feat-list { list-style: none; margin-top: 16px; }
+        .feat-list li { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--text); padding: 7px 0; border-top: 1px solid var(--border); }
+        .feat-list li::before { content: '✓'; color: var(--primary); font-weight: 700; flex-shrink: 0; }
+
+        /* STEPS */
+        .steps-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 48px; margin-top: 56px; position: relative; }
+        .steps-grid::before { content: ''; position: absolute; top: 27px; left: 14%; right: 14%; height: 2px; background: linear-gradient(90deg, var(--primary), var(--secondary)); }
+        .step { text-align: center; position: relative; z-index: 1; }
+        .step-num { width: 54px; height: 54px; border-radius: 50%; background: var(--primary); color: white; font-size: 20px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 0 0 8px var(--primary-light); }
+        .step-title { font-size: 17px; font-weight: 700; color: var(--dark); margin-bottom: 10px; }
+        .step-desc { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+        /* TABLE */
+        .table-wrap { margin-top: 56px; overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); }
+        table { width: 100%; border-collapse: collapse; min-width: 640px; }
+        th { padding: 14px 18px; text-align: left; font-size: 12px; font-weight: 700; background: var(--bg-alt); color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--border); }
+        th.hl { background: var(--primary); color: white; }
+        td { padding: 14px 18px; font-size: 14px; color: var(--text); border-bottom: 1px solid var(--border); }
+        tr:last-child td { border-bottom: none; }
+        td.hl { background: #F0FDF4; font-weight: 600; color: var(--dark); }
+        tr:hover td { background: var(--bg-alt); }
+        tr:hover td.hl { background: #DCFCE7; }
+        .ck { color: var(--primary); font-weight: 700; }
+        .cx { color: #CBD5E1; }
+        .cp { color: var(--warning); }
+
+        /* PRICING */
+        .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 56px; align-items: start; }
+        .plan { background: white; border-radius: 16px; padding: 36px 28px; border: 2px solid var(--border); transition: all 0.25s; }
+        .plan.pop { border-color: var(--primary); transform: translateY(-8px); box-shadow: 0 24px 64px rgba(22,163,74,0.15); position: relative; }
+        .pop-badge { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 5px 18px; border-radius: 100px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+        .plan-name { font-size: 20px; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+        .plan-desc { font-size: 13px; color: var(--muted); margin-bottom: 22px; line-height: 1.5; }
+        .plan-price { margin-bottom: 28px; }
+        .price-n { font-size: 44px; font-weight: 900; color: var(--dark); letter-spacing: -0.025em; }
+        .price-p { font-size: 15px; color: var(--muted); }
+        .price-free { font-size: 38px; font-weight: 900; color: var(--primary); }
+        .plan-feats { list-style: none; margin-bottom: 28px; }
+        .plan-feats li { display: flex; align-items: flex-start; gap: 8px; padding: 9px 0; border-top: 1px solid var(--border); font-size: 14px; color: var(--text); }
+        .plan-feats li .ck { flex-shrink: 0; }
+
+        /* FAQ */
+        .faq-list { margin-top: 56px; max-width: 760px; margin-left: auto; margin-right: auto; }
+        .faq-item { border-bottom: 1px solid var(--border); }
+        .faq-q { width: 100%; text-align: left; padding: 22px 0; background: none; border: none; font-family: inherit; font-size: 16px; font-weight: 600; color: var(--dark); cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+        .faq-ic { width: 26px; height: 26px; border-radius: 50%; background: var(--bg-alt); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px; font-weight: 400; transition: transform 0.3s; color: var(--primary); line-height: 1; }
+        .faq-item.open .faq-ic { transform: rotate(45deg); }
+        .faq-ans { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .faq-ans-inner { padding-bottom: 22px; font-size: 15px; color: var(--muted); line-height: 1.75; }
+        .faq-item.open .faq-ans { max-height: 320px; }
+
+        /* FINAL CTA */
+        #cta-final { padding: 96px 0; background: linear-gradient(135deg, var(--dark) 0%, #1a2744 100%); text-align: center; }
+        #cta-final .section-tag { background: rgba(22,163,74,0.2); color: #86efac; }
+        #cta-final h2 { color: white; margin-bottom: 14px; }
+        #cta-final .lead { color: rgba(255,255,255,0.6); font-size: 17px; margin-bottom: 44px; }
+        .cta-form { display: flex; gap: 10px; max-width: 480px; margin: 0 auto; }
+        .cta-form input { flex: 1; padding: 15px 18px; border: 2px solid rgba(255,255,255,0.15); border-radius: 10px; background: rgba(255,255,255,0.08); color: white; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; }
+        .cta-form input::placeholder { color: rgba(255,255,255,0.35); }
+        .cta-form input:focus { border-color: var(--primary); }
+        .cta-note { font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 16px; }
+
+        /* FOOTER */
+        footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.06); padding: 40px 0; }
+        .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+        .footer-logo { display: flex; align-items: center; gap: 9px; font-size: 16px; font-weight: 700; color: white; text-decoration: none; }
+        .footer-links { display: flex; gap: 24px; list-style: none; }
+        .footer-links a { text-decoration: none; font-size: 13px; color: rgba(255,255,255,0.45); transition: color 0.2s; }
+        .footer-links a:hover { color: white; }
+        .footer-copy { font-size: 12px; color: rgba(255,255,255,0.25); }
+
+        /* ANIMATE */
+        .aos { opacity: 0; transform: translateY(20px); transition: opacity 0.65s ease, transform 0.65s ease; }
+        .aos.v { opacity: 1; transform: translateY(0); }
+        .aos-d1 { transition-delay: 0.1s; }
+        .aos-d2 { transition-delay: 0.2s; }
+        .aos-d3 { transition-delay: 0.3s; }
+
+        /* SUCCESS */
+        .form-success { text-align: center; padding: 24px; }
+        .form-success .emoji { font-size: 44px; margin-bottom: 12px; display: block; }
+        .form-success strong { font-size: 18px; color: var(--dark); display: block; margin-bottom: 6px; }
+        .form-success span { font-size: 14px; color: var(--muted); }
+
+        /* SOCIAL PROOF */
+        .social-proof { display: flex; align-items: center; gap: 12px; margin-top: 18px; }
+        .sp-avatars { display: flex; }
+        .sp-avatars img { width: 32px; height: 32px; border-radius: 50%; border: 2px solid white; object-fit: cover; margin-left: -8px; }
+        .sp-avatars img:first-child { margin-left: 0; }
+        .sp-text { font-size: 13px; color: var(--muted); }
+        .sp-text strong { color: var(--dark); }
+
+        /* TESTIMONIALS */
+        .testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; margin-top: 56px; }
+        .testi { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: all 0.25s; }
+        .testi:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+        .stars { color: #F59E0B; font-size: 15px; letter-spacing: 2px; margin-bottom: 14px; }
+        .testi-text { font-size: 15px; color: var(--text); line-height: 1.75; margin-bottom: 20px; }
+        .testi-person { display: flex; align-items: center; gap: 12px; border-top: 1px solid var(--border); padding-top: 16px; }
+        .testi-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+        .testi-name { font-size: 14px; font-weight: 700; color: var(--dark); }
+        .testi-role { font-size: 12px; color: var(--muted); margin-top: 1px; }
+
+        /* CONTEXT BANNER */
+        .context-banner { margin-top: 64px; border-radius: 20px; overflow: hidden; position: relative; height: 340px; }
+        .context-banner img { width: 100%; height: 100%; object-fit: cover; }
+        .context-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(15,23,42,0.85) 0%, rgba(15,23,42,0.4) 60%, transparent 100%); display: flex; align-items: center; padding: 48px; }
+        .context-text { max-width: 480px; }
+        .context-text h3 { font-size: 28px; font-weight: 800; color: white; line-height: 1.3; margin-bottom: 12px; }
+        .context-text p { font-size: 16px; color: rgba(255,255,255,0.75); line-height: 1.65; }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .hero-grid { grid-template-columns: 1fr; }
+            .hero-visual { display: none; }
+            .stats-grid { grid-template-columns: repeat(2,1fr); }
+            .pain-grid, .features-grid, .pricing-grid, .testi-grid { grid-template-columns: repeat(2,1fr); }
+            .steps-grid { grid-template-columns: repeat(3,1fr); gap: 24px; }
+        }
+        @media (max-width: 640px) {
+            .pain-grid, .features-grid, .pricing-grid, .steps-grid, .testi-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .cta-form { flex-direction: column; }
+            .nav-links { display: none; }
+            .plan.pop { transform: none; }
+            .steps-grid::before { display: none; }
+            .footer-inner { flex-direction: column; text-align: center; }
+            .context-banner { height: 260px; }
+            .context-overlay { padding: 24px; }
+            .context-text h3 { font-size: 20px; }
+            .context-text p { font-size: 14px; }
+            .social-proof { flex-direction: column; gap: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+    <div class="container">
+        <div class="nav-inner">
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                Copiloto de Pymes
+            </a>
+            <ul class="nav-links">
+                <li><a href="#solucion">Funcionalidades</a></li>
+                <li><a href="#comparativa">Comparativa</a></li>
+                <li><a href="#precios">Precios</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+            <a href="#cta-final" class="btn btn-primary">Acceso Anticipado</a>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+    <div class="container">
+        <div class="hero-grid">
+            <div>
+                <div class="hero-badge">
+                    <div class="hero-badge-dot"></div>
+                    Acceso beta anticipado — Primeros 100 gratis por 3 meses
+                </div>
+                <h1>Tu empresa nunca más pagará <span class="hi">multas al SII</span></h1>
+                <p class="hero-sub">Copiloto monitorea tu cumplimiento tributario y laboral con IA, enviando alertas 30 días antes de cada vencimiento. Para dueños de PyME, no para contadores.</p>
+                <form class="hero-form" id="hero-form" onsubmit="handleSubmit(event, 'hero-form')">
+                    <div class="form-row">
+                        <input type="text" name="nombre" placeholder="Tu nombre" required>
+                        <input type="text" name="empresa" placeholder="Nombre de tu empresa">
+                    </div>
+                    <input type="email" name="email" placeholder="Tu correo electrónico" required>
+                    <select name="empleados">
+                        <option value="" disabled selected>¿Cuántos empleados tienes?</option>
+                        <option value="0">Solo yo (sin empleados)</option>
+                        <option value="1-5">1 a 5 empleados</option>
+                        <option value="6-20">6 a 20 empleados</option>
+                        <option value="21+">Más de 20 empleados</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary btn-lg">Quiero acceso anticipado gratuito →</button>
+                </form>
+                <div class="social-proof">
+                    <div class="sp-text">🚀 <strong>Acceso anticipado con precio de fundador</strong> — cupos limitados</div>
+                </div>
+                <div class="hero-trust">
+                    <div class="trust-item"><span class="trust-check">✓</span> Sin tarjeta de crédito</div>
+                    <div class="trust-item"><span class="trust-check">✓</span> Cancela cuando quieras</div>
+                    <div class="trust-item"><span class="trust-check">✓</span> 100% en español</div>
+                </div>
+            </div>
+
+            <!-- Dashboard Mock -->
+            <div class="hero-visual aos">
+                <div class="dashboard-mock">
+                    <div class="mock-bar">
+                        <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+                        <div class="mock-url">app.copilotodepymes.cl</div>
+                    </div>
+                    <div class="mock-body">
+                        <div class="mock-hi">Hola, María 👋</div>
+                        <div class="mock-title-text">Tu semáforo de cumplimiento</div>
+                        <div class="semaforo">
+                            <div class="sf v"><div class="sf-dot"></div><div class="sf-lbl">Tributario</div><div class="sf-val">OK</div></div>
+                            <div class="sf a"><div class="sf-dot"></div><div class="sf-lbl">Laboral</div><div class="sf-val">⚠️</div></div>
+                            <div class="sf v"><div class="sf-dot"></div><div class="sf-lbl">Flujo Caja</div><div class="sf-val">OK</div></div>
+                        </div>
+                        <div class="alerts">
+                            <div class="al">
+                                <div class="al-ic w">⚠️</div>
+                                <div class="al-info"><div class="al-t">IVA Formulario F29</div><div class="al-d">Vencimiento el 12 de abril</div></div>
+                                <div class="al-badge w">7 días</div>
+                            </div>
+                            <div class="al">
+                                <div class="al-ic d">🚨</div>
+                                <div class="al-info"><div class="al-t">Control 40 hrs — 2 trabajadores</div><div class="al-d">Registros pendientes esta semana</div></div>
+                                <div class="al-badge d">Urgente</div>
+                            </div>
+                            <div class="al">
+                                <div class="al-ic ok">✅</div>
+                                <div class="al-info"><div class="al-t">PPM pagado correctamente</div><div class="al-d">Procesado el 15 de marzo</div></div>
+                                <div class="al-badge ok">Al día</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="aos"><div class="stat-n">550.000</div><div class="stat-l">PyMES formales en Chile que necesitan esta solución</div></div>
+            <div class="aos aos-d1"><div class="stat-n">$645k</div><div class="stat-l">Multa promedio por infracción tributaria en CLP</div></div>
+            <div class="aos aos-d2"><div class="stat-n">$6,5M</div><div class="stat-l">Deuda tributaria promedio por empresa en CLP</div></div>
+            <div class="aos aos-d3"><div class="stat-n">10 hrs</div><div class="stat-l">Ahorra tu contador por cliente al mes con Copiloto</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- DOLOR -->
+<section id="dolor" class="section alt">
+    <div class="container">
+        <div class="section-tag">El problema real</div>
+        <h2>Las PyMES no mueren por falta<br>de ventas. Mueren por <span class="red">sorpresas</span>.</h2>
+        <p class="section-sub">El SII no avisa. La ley laboral no espera. Y cuando llega la multa, ya es demasiado tarde para evitarla.</p>
+        <div class="pain-grid">
+            <div class="pain-card aos"><span class="pain-emoji">💸</span><div class="pain-amt">$645.000</div><div class="pain-lbl">Multa promedio por infracción tributaria</div><p class="pain-desc">Una fecha olvidada, un F29 mal declarado o un PPM incorrecto pueden costarte más que un mes de utilidades.</p></div>
+            <div class="pain-card aos aos-d1"><span class="pain-emoji">⚖️</span><div class="pain-amt">$500.000</div><div class="pain-lbl">Multa por infracción a la Ley de 40 horas</div><p class="pain-desc">Desde octubre 2024, la DT fiscaliza el control de asistencia activamente. Sin registro digital, la multa es automática.</p></div>
+            <div class="pain-card aos aos-d2"><span class="pain-emoji">🏦</span><div class="pain-amt">Bloqueo</div><div class="pain-lbl">Bancario por deuda tributaria impaga</div><p class="pain-desc">La Ley 21.713 exige inicio de actividades para acceder a crédito. La deuda tributaria bloquea tu financiamiento en el peor momento.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- SOLUCIÓN / FEATURES -->
+<section id="solucion" class="section">
+    <div class="container">
+        <div class="section-tag">La solución</div>
+        <h2>Protección 360° para tu empresa.<br>Tributaria, laboral y financiera.</h2>
+        <p class="section-sub">Tres módulos integrados que trabajan juntos para darte visión completa del estado de cumplimiento de tu empresa.</p>
+        <div class="features-grid">
+            <div class="feat trib aos">
+                <div class="feat-icon">🛡️</div>
+                <div class="feat-title">Escudo Tributario</div>
+                <p class="feat-desc">Monitoreo en tiempo real de tus obligaciones con el SII. Sin sorpresas, sin multas.</p>
+                <ul class="feat-list">
+                    <li>Alertas IVA, PPM y honorarios 30 días antes</li>
+                    <li>Conexión automática al SII vía API segura</li>
+                    <li>Declaraciones pendientes en un clic</li>
+                    <li>Historial completo de cumplimiento</li>
+                    <li>Score de cumplimiento en tiempo real</li>
+                </ul>
+            </div>
+            <div class="feat lab aos aos-d1">
+                <div class="feat-icon">👷</div>
+                <div class="feat-title">Escudo Laboral</div>
+                <p class="feat-desc">Control automático de la jornada de 40 horas y alertas de cotizaciones Previred.</p>
+                <ul class="feat-list">
+                    <li>Control de 40 horas semanales automático</li>
+                    <li>Alertas de pago de cotizaciones Previred</li>
+                    <li>Gestión de hasta 5 trabajadores</li>
+                    <li>Asistente IA para consultas laborales</li>
+                    <li>Reportes para fiscalización DT</li>
+                </ul>
+            </div>
+            <div class="feat cash aos aos-d2">
+                <div class="feat-icon">📈</div>
+                <div class="feat-title">Brújula Financiera</div>
+                <p class="feat-desc">Predicción inteligente del flujo de caja para decisiones con datos, no con intuición.</p>
+                <ul class="feat-list">
+                    <li>Proyección de flujo de caja 30/60/90 días</li>
+                    <li>Alertas de liquidez anticipadas</li>
+                    <li>Benchmarking vs tu industria</li>
+                    <li>Calculadora de decisiones financieras</li>
+                    <li>Chatbot IA para consultas contables</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CÓMO FUNCIONA -->
+<section id="como-funciona" class="section alt">
+    <div class="container center">
+        <div class="section-tag">¿Cómo funciona?</div>
+        <h2>Listo en 2 minutos.<br>Sin instalaciones. Sin configuraciones.</h2>
+        <div class="steps-grid">
+            <div class="step aos">
+                <div class="step-num">1</div>
+                <div class="step-title">Conecta tu RUT</div>
+                <p class="step-desc">Autoriza el acceso a tu información del SII de forma segura. No guardamos tu clave — usamos OAuth2 con encriptación AES-256.</p>
+            </div>
+            <div class="step aos aos-d1">
+                <div class="step-num">2</div>
+                <div class="step-title">Activa tu semáforo</div>
+                <p class="step-desc">En segundos, Copiloto analiza tu situación y te muestra 5 indicadores clave en verde, amarillo o rojo. Sin jerga contable.</p>
+            </div>
+            <div class="step aos aos-d2">
+                <div class="step-num">3</div>
+                <div class="step-title">Recibe alertas a tiempo</div>
+                <p class="step-desc">Te avisamos por correo y WhatsApp 30, 15 y 7 días antes de cada vencimiento. Nunca más una multa por olvido.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- COMPARATIVA -->
+<section id="comparativa" class="section">
+    <div class="container">
+        <div class="section-tag">¿Por qué Copiloto?</div>
+        <h2>La única solución que cubre<br>tributario + laboral + IA juntos.</h2>
+        <p class="section-sub">Ninguna otra herramienta del mercado ofrece las tres dimensiones en un precio accesible para PyMES.</p>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Funcionalidad</th>
+                        <th class="hl">🚀 Copiloto</th>
+                        <th>Maxxa (Gratis)</th>
+                        <th>Nubox ($60k/mes)</th>
+                        <th>Chipax ($110k/mes)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Precio mensual</td><td class="hl">Gratis / $19.990</td><td>Gratis</td><td>$50.000–$70.000</td><td>$95.000–$120.000</td></tr>
+                    <tr><td>Alertas tributarias</td><td class="hl"><span class="ck">✓ Predictivas</span></td><td><span class="cp">⚡ Reactivas</span></td><td><span class="ck">✓ Básicas</span></td><td><span class="cx">✗ No</span></td></tr>
+                    <tr><td>Control laboral 40 hrs</td><td class="hl"><span class="ck">✓ Automático</span></td><td><span class="cx">✗ No</span></td><td><span class="cp">⚡ Básico</span></td><td><span class="cx">✗ No</span></td></tr>
+                    <tr><td>Predicción flujo de caja</td><td class="hl"><span class="ck">✓ 30/60/90 días</span></td><td><span class="cx">✗ No</span></td><td><span class="cx">✗ No</span></td><td><span class="ck">✓ Básico</span></td></tr>
+                    <tr><td>Chatbot IA integrado</td><td class="hl"><span class="ck">✓ Claude AI</span></td><td><span class="cx">✗ No</span></td><td><span class="cx">✗ No</span></td><td><span class="cx">✗ No</span></td></tr>
+                    <tr><td>Alertas por WhatsApp</td><td class="hl"><span class="ck">✓ Incluido</span></td><td><span class="cx">✗ No</span></td><td><span class="cx">✗ No</span></td><td><span class="cx">✗ No</span></td></tr>
+                    <tr><td>Diseñado para dueños PyME</td><td class="hl"><span class="ck">✓ 100%</span></td><td><span class="cp">⚡ Parcial</span></td><td><span class="cx">✗ Para contadores</span></td><td><span class="cx">✗ Para contadores</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- PRECIOS -->
+<section id="precios" class="section alt">
+    <div class="container center">
+        <div class="section-tag">Planes y precios</div>
+        <h2>Precios diseñados para PyMES,<br>no para grandes empresas.</h2>
+        <p class="section-sub">Sin contratos anuales. Sin costos de implementación. Cancela cuando quieras.</p>
+        <div class="pricing-grid">
+            <div class="plan aos">
+                <div class="plan-name">Emprendedor</div>
+                <p class="plan-desc">Para comenzar y probar antes de comprometerse.</p>
+                <div class="plan-price"><div class="price-free">Gratis</div><div class="price-p">para siempre</div></div>
+                <ul class="plan-feats">
+                    <li><span class="ck">✓</span> Dashboard básico de cumplimiento</li>
+                    <li><span class="ck">✓</span> Alertas solo de IVA (F29)</li>
+                    <li><span class="ck">✓</span> Semáforo de estado tributario</li>
+                    <li><span class="ck">✓</span> Notificaciones por correo</li>
+                    <li style="color:var(--muted)">✗ Control laboral 40 hrs</li>
+                    <li style="color:var(--muted)">✗ Predicción de flujo de caja</li>
+                    <li style="color:var(--muted)">✗ Chatbot IA</li>
+                </ul>
+                <a href="#cta-final" class="btn btn-outline btn-full">Comenzar gratis</a>
+            </div>
+            <div class="plan pop aos aos-d1">
+                <div class="pop-badge">⭐ Más popular</div>
+                <div class="plan-name">Cumplimiento Total</div>
+                <p class="plan-desc">Ideal para PyMES con hasta 5 empleados que quieren protección completa.</p>
+                <div class="plan-price"><span class="price-n">$19.990</span><span class="price-p">/mes</span></div>
+                <ul class="plan-feats">
+                    <li><span class="ck">✓</span> Todo el plan Emprendedor</li>
+                    <li><span class="ck">✓</span> <strong>Todas</strong> las alertas tributarias</li>
+                    <li><span class="ck">✓</span> Control 40 hrs (hasta 3 trabajadores)</li>
+                    <li><span class="ck">✓</span> Alertas cotizaciones Previred</li>
+                    <li><span class="ck">✓</span> Chatbot IA básico (tributario)</li>
+                    <li><span class="ck">✓</span> Alertas por WhatsApp</li>
+                    <li><span class="ck">✓</span> Score de cumplimiento en tiempo real</li>
+                </ul>
+                <a href="#cta-final" class="btn btn-primary btn-full">Quiero acceso anticipado</a>
+            </div>
+            <div class="plan aos aos-d2">
+                <div class="plan-name">Escalabilidad</div>
+                <p class="plan-desc">Para empresas en crecimiento que necesitan predicción financiera avanzada.</p>
+                <div class="plan-price"><span class="price-n">$39.990</span><span class="price-p">/mes</span></div>
+                <ul class="plan-feats">
+                    <li><span class="ck">✓</span> Todo el plan Cumplimiento Total</li>
+                    <li><span class="ck">✓</span> Control laboral (hasta 5 trabajadores)</li>
+                    <li><span class="ck">✓</span> Predicción flujo de caja 30/60/90 días</li>
+                    <li><span class="ck">✓</span> Calculadora de decisiones</li>
+                    <li><span class="ck">✓</span> Chatbot IA avanzado (laboral + financiero)</li>
+                    <li><span class="ck">✓</span> Benchmarking vs industria</li>
+                    <li><span class="ck">✓</span> Hasta 5 usuarios del equipo</li>
+                </ul>
+                <a href="#cta-final" class="btn btn-outline btn-full">Quiero acceso anticipado</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CONTEXT BANNER -->
+<section class="section">
+    <div class="container">
+        <div class="context-banner aos">
+            <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1400&q=80&fit=crop" alt="Dueño de PyME trabajando">
+            <div class="context-overlay">
+                <div class="context-text">
+                    <h3>550.000 PyMES en Chile merecen saber cuándo pagar sus impuestos.</h3>
+                    <p>La información existe. El SII la tiene. Copiloto te la entrega en el momento justo, en el formato que entiendes, antes de que sea tarde.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="section">
+    <div class="container center">
+        <div class="section-tag">Preguntas frecuentes</div>
+        <h2>Todo lo que necesitas saber</h2>
+        <div class="faq-list" style="text-align:left">
+            <div class="faq-item">
+                <button class="faq-q" onclick="toggleFaq(this)">¿Necesito dar mi clave del SII a Copiloto?<span class="faq-ic">+</span></button>
+                <div class="faq-ans"><div class="faq-ans-inner">No. Copiloto usa OAuth 2.0, el mismo sistema de Google o Apple. Autorizas el acceso directamente desde el SII y en ningún momento nosotros almacenamos tu clave. La conexión está encriptada con AES-256. Tu información está siempre bajo tu control.</div></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-q" onclick="toggleFaq(this)">¿En qué se diferencia de Maxxa, que es gratis?<span class="faq-ic">+</span></button>
+                <div class="faq-ans"><div class="faq-ans-inner">Maxxa te avisa cuando ya tienes una deuda. Copiloto te avisa 30 días antes para que puedas preparar el pago. Además, Maxxa no cubre obligaciones laborales, no tiene predicción de flujo de caja y no incluye chatbot de IA. Copiloto es predictivo — Maxxa es reactivo. Y el negocio de Maxxa es prestarte dinero, no protegerte.</div></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-q" onclick="toggleFaq(this)">¿Necesito saber de contabilidad para usar Copiloto?<span class="faq-ic">+</span></button>
+                <div class="faq-ans"><div class="faq-ans-inner">No. Copiloto está diseñado para dueños de PyME, no para contadores. El lenguaje es simple, el semáforo es visual (verde/amarillo/rojo) y el chatbot explica cada alerta en términos que cualquier persona entiende. Si tienes contador, Copiloto le ahorrará 10 horas de trabajo al mes.</div></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-q" onclick="toggleFaq(this)">¿Cuándo estará disponible la plataforma?<span class="faq-ic">+</span></button>
+                <div class="faq-ans"><div class="faq-ans-inner">Estamos en fase de construcción del MVP. Los primeros 100 usuarios de la lista de espera obtendrán acceso beta gratuito durante 3 meses, más precio preferencial de fundador de por vida. Regístrate ahora para asegurar tu lugar.</div></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-q" onclick="toggleFaq(this)">¿Puedo cancelar en cualquier momento?<span class="faq-ic">+</span></button>
+                <div class="faq-ans"><div class="faq-ans-inner">Sí. Sin contratos anuales ni penalizaciones. Cancelas desde el panel con un clic y seguirás con acceso hasta el final del período pagado. Sin letras pequeñas.</div></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-q" onclick="toggleFaq(this)">¿Funciona para cualquier tipo de empresa chilena?<span class="faq-ic">+</span></button>
+                <div class="faq-ans"><div class="faq-ans-inner">Sí, para cualquier empresa con inicio de actividades en el SII: EIRL, SPA, Ltda., personas con boleta de honorarios y cualquier PyME con RUT tributario activo. Si tienes más de 50 empleados, contáctanos para una cotización empresarial.</div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="cta-final">
+    <div class="container">
+        <div class="section-tag">Lista de espera</div>
+        <h2>Los primeros 100 en registrarse<br>obtienen 3 meses gratis</h2>
+        <p class="lead">Más precio de fundador de por vida. Sin condiciones. Solo por ser de los primeros.</p>
+        <!-- ===================================================
+             TODO: Conectar formulario a Google Forms
+             1. Crear un Google Form con campo "email"
+             2. Copiar la URL de acción del formulario (formato: https://docs.google.com/forms/d/e/TU_ID/formResponse)
+             3. Reemplazar "#" en el action del form por esa URL
+             4. Agregar el atributo name="entry.XXXXXXXXX" al input email
+                (el ID de campo se encuentra en el HTML fuente del Google Form)
+             =================================================== -->
+        <form class="cta-form" id="cta-form" onsubmit="handleSubmit(event, 'cta-form')">
+            <input type="email" name="email" placeholder="Tu correo electrónico" required>
+            <button type="submit" class="btn btn-primary btn-lg">Reservar mi lugar →</button>
+        </form>
+        <p class="cta-note">Sin spam. Sin cargos. Solo te avisamos cuando esté listo.</p>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="container">
+        <div class="footer-inner">
+            <a href="#" class="footer-logo">
+                <div class="logo-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+                Copiloto de Pymes
+            </a>
+            <ul class="footer-links">
+                <li><a href="#">Privacidad</a></li>
+                <li><a href="#">Términos de uso</a></li>
+                <li><a href="#">Contacto</a></li>
+            </ul>
+            <div class="footer-copy">© 2026 Copiloto de Pymes. Hecho en Chile 🇨🇱</div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // ============================================================
+    // PASO 1: Pega aquí la URL de acción de tu Google Form
+    //   Formato: https://docs.google.com/forms/d/e/TU_ID/formResponse
+    // PASO 2: Reemplaza los entry.XXXXXXXXX con los IDs reales
+    //   (sigue las instrucciones del README para encontrarlos)
+    // ============================================================
+    const FORM_CONFIG = {
+        action: 'https://docs.google.com/forms/d/e/1FAIpQLSeznZ0rgvmFVigzR1iELeIAp6TpkhEqvgqFCS-tAH9KrlfWcw/formResponse',
+        fields: {
+            nombre:    'entry.1951241723',
+            empresa:   'entry.1847683883',
+            email:     'entry.674134961',
+            empleados: 'entry.1387226411'
+        }
+    };
+
+    // Sticky nav
+    window.addEventListener('scroll', () => {
+        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Animate on scroll
+    const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('v'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.aos').forEach(el => obs.observe(el));
+
+    // FAQ accordion
+    function toggleFaq(btn) {
+        const item = btn.parentElement;
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+    }
+
+    // Form submission
+    function handleSubmit(event, formId) {
+        event.preventDefault();
+        const form = event.target;
+        const btn = form.querySelector('button[type="submit"]');
+        btn.textContent = 'Enviando...';
+        btn.disabled = true;
+
+        const raw = Object.fromEntries(new FormData(form));
+
+        // Método iframe — único confiable para Google Forms sin backend
+        const iframeName = 'gf_' + Date.now();
+        const iframe = document.createElement('iframe');
+        iframe.name = iframeName;
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+
+        const gform = document.createElement('form');
+        gform.method = 'POST';
+        gform.action = FORM_CONFIG.action;
+        gform.target = iframeName;
+        gform.style.display = 'none';
+
+        const fields = { [FORM_CONFIG.fields.email]: raw.email || '' };
+        if (raw.nombre)    fields[FORM_CONFIG.fields.nombre]    = raw.nombre;
+        if (raw.empresa)   fields[FORM_CONFIG.fields.empresa]   = raw.empresa;
+        if (raw.empleados) fields[FORM_CONFIG.fields.empleados] = raw.empleados;
+
+        Object.entries(fields).forEach(([name, value]) => {
+            const inp = document.createElement('input');
+            inp.type = 'hidden'; inp.name = name; inp.value = value;
+            gform.appendChild(inp);
+        });
+
+        document.body.appendChild(gform);
+        gform.submit();
+        setTimeout(() => {
+            if (document.body.contains(gform))  document.body.removeChild(gform);
+            if (document.body.contains(iframe)) document.body.removeChild(iframe);
+        }, 4000);
+
+        setTimeout(() => showFormSuccess(form), 800);
+    }
+
+    function showFormSuccess(form) {
+        form.innerHTML = `
+            <div class="form-success">
+                <span class="emoji">🎉</span>
+                <strong>¡Estás en la lista!</strong>
+                <span>Te avisamos cuando tengamos acceso disponible. Revisa tu correo.</span>
+            </div>
+        `;
+    }
+</script>
+</body>
+</html>
