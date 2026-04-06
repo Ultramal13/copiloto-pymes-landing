@@ -343,6 +343,18 @@
         .faq-ans-inner { padding-bottom: 22px; font-size: 15px; color: var(--muted); line-height: 1.75; }
         .faq-item.open .faq-ans { max-height: 320px; }
 
+        /* CONTACT FORM */
+        .contact-wrap { margin-top: 56px; max-width: 640px; margin-left: auto; margin-right: auto; }
+        .contact-form { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 40px; text-align: left; }
+        .contact-form .form-group { margin-bottom: 20px; }
+        .contact-form label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+        .contact-form input, .contact-form textarea { width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: 9px; background: rgba(255,255,255,0.03); color: var(--text); font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s, background 0.2s; }
+        .contact-form input:focus, .contact-form textarea:focus { border-color: var(--primary); background: rgba(0,214,143,0.03); }
+        .contact-form input::placeholder, .contact-form textarea::placeholder { color: var(--dim); }
+        .contact-form textarea { resize: vertical; min-height: 120px; }
+        .c-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 640px) { .c-row { display: flex; flex-direction: column; gap: 0; } .contact-form { padding: 24px; } }
+
         /* FINAL CTA */
         #cta-final {
             padding: 100px 0; text-align: center; position: relative; overflow: hidden;
@@ -496,6 +508,7 @@
                 <li><a href="#comparativa">Comparativa</a></li>
                 <li><a href="#pricing">Precios</a></li>
                 <li><a href="#faq">FAQ</a></li>
+                <li><a href="#contacto">Contacto</a></li>
             </ul>
             <a href="dashboard.html" target="_blank" class="btn btn-ghost nav-demo-btn" style="margin-right:8px;">Ver demo</a>
             <a href="#pricing" class="btn btn-primary">Ver Planes y Precios</a>
@@ -515,7 +528,7 @@
 
         <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:36px;">
             <a href="#pricing" class="btn btn-primary btn-lg">Ver Planes y Precios →</a>
-            <a href="https://wa.me/56964554988?text=Hola%2C%20quiero%20hablar%20con%20ventas%20de%20Copiloto%20de%20Pymes" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-lg">Hablar con Ventas</a>
+            <a href="#contacto" class="btn btn-ghost btn-lg">Hablar con Ventas</a>
         </div>
 
         <div class="hero-trust">
@@ -729,7 +742,7 @@
                     <li><span class="ck">✓</span> Dashboard Web con Semáforo Tributario</li>
                     <li><span class="ck">✓</span> Alertas de WhatsApp (Solo estado Rojo: F29 atrasado, Anotaciones SII)</li>
                 </ul>
-                <a href="https://wa.me/56964554988?text=Hola%2C%20quiero%20el%20Plan%20Radar%20de%20Copiloto%20de%20Pymes" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-full">Elegir Plan Radar</a>
+                <a href="#contacto" class="btn btn-ghost btn-full">Elegir Plan Radar</a>
             </div>
 
             <!-- PLAN 2: Copiloto Pro (destacado) -->
@@ -745,7 +758,7 @@
                     <li><span class="ck">✓</span> Alertas Predictivas de WhatsApp (Facturas por vencer, diferencias RCV)</li>
                     <li><span class="ck">✓</span> Asistente IA (Hazle preguntas tributarias y legales a tu Copiloto por WhatsApp)</li>
                 </ul>
-                <a href="https://wa.me/56964554988?text=Hola%2C%20quiero%20el%20plan%20Copiloto%20Pro%20de%20Copiloto%20de%20Pymes" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-full">Elegir Copiloto Pro →</a>
+                <a href="#contacto" class="btn btn-primary btn-full">Elegir Copiloto Pro →</a>
             </div>
 
             <!-- PLAN 3: Partners -->
@@ -759,7 +772,7 @@
                     <li><span class="ck">✓</span> Enrutamiento de alertas</li>
                     <li><span class="ck">✓</span> La IA notifica a tus clientes por ti</li>
                 </ul>
-                <a href="https://wa.me/56964554988?text=Hola%2C%20me%20interesa%20el%20Plan%20Partners%20de%20Copiloto%20de%20Pymes" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-full">Cotizar Volumen</a>
+                <a href="#contacto" class="btn btn-ghost btn-full">Cotizar Volumen</a>
             </div>
 
         </div>
@@ -815,6 +828,46 @@
     </div>
 </section>
 
+<!-- CONTACTO -->
+<section id="contacto" class="section alt">
+    <div class="container center">
+        <div class="section-tag">Captación de Leads</div>
+        <h2>¿Tienes dudas? <br><span class="grad">Hablemos sobre tu Pyme</span></h2>
+        <p class="section-sub">Déjanos tus datos y un especialista se pondrá en contacto contigo a la brevedad para mostrarte cómo funciona Copiloto.</p>
+        
+        <div class="contact-wrap aos">
+            <form class="contact-form" onsubmit="event.preventDefault(); alert('¡Gracias! Nos pondremos en contacto pronto.');">
+                <div class="c-row">
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" placeholder="Ej. Juan" required oninvalid="this.setCustomValidity('Este campo es obligatorio')" oninput="this.setCustomValidity('')">
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido">Apellido</label>
+                        <input type="text" id="apellido" placeholder="Ej. Pérez" required oninvalid="this.setCustomValidity('Este campo es obligatorio')" oninput="this.setCustomValidity('')">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="empresa">Empresa</label>
+                    <input type="text" id="empresa" placeholder="Nombre de tu empresa" required oninvalid="this.setCustomValidity('Este campo es obligatorio')" oninput="this.setCustomValidity('')">
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <div style="display:flex; align-items:center; position:relative;">
+                        <span style="position:absolute; left:16px; color:var(--text); font-size:15px; font-weight:500;">+56 9</span>
+                        <input type="tel" id="telefono" placeholder="12345678" maxlength="8" pattern="[0-9]{8}" style="padding-left: 64px;" required oninvalid="if(this.value){this.setCustomValidity('Ingresa los 8 dígitos numéricos de tu celular')}else{this.setCustomValidity('Este campo es obligatorio')}" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.setCustomValidity('')">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="comentarios">Comentarios o consulta</label>
+                    <textarea id="comentarios" placeholder="¿En qué podemos ayudarte?" required oninvalid="this.setCustomValidity('Este campo es obligatorio')" oninput="this.setCustomValidity('')"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full btn-lg" style="margin-top: 10px;">Enviar mensaje</button>
+            </form>
+        </div>
+    </div>
+</section>
+
 <!-- FINAL CTA -->
 <section id="cta-final">
     <div class="container">
@@ -823,7 +876,7 @@
         <p class="lead">Sin contratos. Sin instalaciones. Conecta tu RUT y tu primer alerta llega en menos de 24 horas.</p>
         <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:8px;">
             <a href="#pricing" class="btn btn-primary btn-lg">Ver Planes y Precios →</a>
-            <a href="https://wa.me/56964554988?text=Hola%2C%20quiero%20hablar%20con%20ventas%20de%20Copiloto%20de%20Pymes" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-lg">Hablar con Ventas</a>
+            <a href="#contacto" class="btn btn-ghost btn-lg">Hablar con Ventas</a>
         </div>
         <p class="cta-note" style="margin-top:20px;">Sin tarjeta de crédito · Cancela cuando quieras · 100% en español</p>
     </div>
@@ -841,7 +894,7 @@
             </a>
             <ul class="footer-links">
                 <li><a href="#">Términos y Condiciones y Política de Privacidad</a></li>
-                <li><a href="https://wa.me/56964554988?text=Hola%2C%20quiero%20contactar%20a%20Copiloto%20de%20Pymes" target="_blank" rel="noopener noreferrer">Contacto</a></li>
+                <li><a href="#contacto">Contacto</a></li>
             </ul>
             <div class="footer-copy">© 2026 Copiloto de Pymes. Hecho en Chile 🇨🇱</div>
         </div>
@@ -866,14 +919,6 @@
     }
 </script>
 
-<!-- WHATSAPP FLOTANTE — reemplaza XXXXXXXXXXX por tu número (ej: 56912345678) -->
-<a href="https://wa.me/56964554988?text=Hola%2C%20me%20interesa%20Copiloto%20de%20Pymes%20%F0%9F%91%8B"
-   target="_blank" rel="noopener noreferrer"
-   class="whatsapp-btn"
-   aria-label="Contactar por WhatsApp">
-    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path fill="#fff" d="M16 2C8.268 2 2 8.268 2 16c0 2.478.648 4.805 1.782 6.82L2 30l7.38-1.754A13.93 13.93 0 0016 30c7.732 0 14-6.268 14-14S23.732 2 16 2zm0 25.6a11.545 11.545 0 01-5.89-1.608l-.422-.252-4.38 1.042 1.078-4.262-.276-.436A11.545 11.545 0 014.4 16C4.4 9.59 9.59 4.4 16 4.4S27.6 9.59 27.6 16 22.41 27.6 16 27.6zm6.334-8.664c-.347-.174-2.055-1.014-2.374-1.13-.318-.116-.55-.174-.78.174-.232.347-.896 1.13-1.098 1.362-.202.232-.404.26-.75.087-.347-.174-1.464-.54-2.788-1.72-1.03-.918-1.726-2.052-1.928-2.399-.202-.347-.022-.535.152-.708.156-.156.347-.405.52-.608.174-.202.232-.347.347-.578.116-.232.058-.434-.029-.608-.087-.174-.78-1.882-1.07-2.578-.28-.676-.566-.584-.78-.595l-.664-.011c-.232 0-.608.087-.926.434-.318.347-1.214 1.186-1.214 2.894 0 1.708 1.243 3.358 1.416 3.59.174.232 2.447 3.734 5.929 5.236.829.358 1.476.572 1.98.732.832.265 1.589.228 2.187.138.667-.1 2.055-.84 2.346-1.652.29-.812.29-1.508.202-1.652-.086-.144-.318-.232-.664-.405z"/>
-    </svg>
-</a>
+
 </body>
 </html>
