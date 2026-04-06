@@ -836,34 +836,41 @@
         <p class="section-sub">Déjanos tus datos y un especialista se pondrá en contacto contigo a la brevedad para mostrarte cómo funciona Copiloto.</p>
         
         <div class="contact-wrap aos">
-            <form class="contact-form" onsubmit="event.preventDefault(); alert('¡Gracias! Nos pondremos en contacto pronto.');">
+            <form class="contact-form" id="contactForm">
                 <div class="c-row">
                     <div class="form-group">
                         <label for="nombre">Nombre</label>
-                        <input type="text" id="nombre" placeholder="Ej. Juan" required oninvalid="this.setCustomValidity('Este campo es obligatorio')" oninput="this.setCustomValidity('')">
+                        <input type="text" id="nombre" name="nombre" placeholder="Ej. Juan" required oninvalid="this.setCustomValidity('Este campo es obligatorio')" oninput="this.setCustomValidity('')">
                     </div>
                     <div class="form-group">
                         <label for="apellido">Apellido</label>
-                        <input type="text" id="apellido" placeholder="Ej. Pérez" required oninvalid="this.setCustomValidity('Este campo es obligatorio')" oninput="this.setCustomValidity('')">
+                        <input type="text" id="apellido" name="apellido" placeholder="Ej. Pérez" required oninvalid="this.setCustomValidity('Este campo es obligatorio')" oninput="this.setCustomValidity('')">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="empresa">Empresa</label>
-                    <input type="text" id="empresa" placeholder="Nombre de tu empresa" required oninvalid="this.setCustomValidity('Este campo es obligatorio')" oninput="this.setCustomValidity('')">
+                    <input type="text" id="empresa" name="empresa" placeholder="Nombre de tu empresa" required oninvalid="this.setCustomValidity('Este campo es obligatorio')" oninput="this.setCustomValidity('')">
                 </div>
                 <div class="form-group">
                     <label for="telefono">Teléfono</label>
                     <div style="display:flex; align-items:center; position:relative;">
                         <span style="position:absolute; left:16px; color:var(--text); font-size:15px; font-weight:500;">+56 9</span>
-                        <input type="tel" id="telefono" placeholder="12345678" maxlength="8" pattern="[0-9]{8}" style="padding-left: 64px;" required oninvalid="if(this.value){this.setCustomValidity('Ingresa los 8 dígitos numéricos de tu celular')}else{this.setCustomValidity('Este campo es obligatorio')}" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.setCustomValidity('')">
+                        <input type="tel" id="telefono" name="telefono" placeholder="12345678" maxlength="8" pattern="[0-9]{8}" style="padding-left: 64px;" required oninvalid="if(this.value){this.setCustomValidity('Ingresa los 8 dígitos numéricos de tu celular')}else{this.setCustomValidity('Este campo es obligatorio')}" oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.setCustomValidity('')">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="comentarios">Comentarios o consulta</label>
-                    <textarea id="comentarios" placeholder="¿En qué podemos ayudarte?" required oninvalid="this.setCustomValidity('Este campo es obligatorio')" oninput="this.setCustomValidity('')"></textarea>
+                    <textarea id="comentarios" name="comentarios" placeholder="¿En qué podemos ayudarte?" required oninvalid="this.setCustomValidity('Este campo es obligatorio')" oninput="this.setCustomValidity('')"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary btn-full btn-lg" style="margin-top: 10px;">Enviar mensaje</button>
+                <button type="submit" id="submitBtn" class="btn btn-primary btn-full btn-lg" style="margin-top: 10px;">Enviar mensaje</button>
             </form>
+            
+            <!-- Success Message (Hidden by default) -->
+            <div id="formSuccess" class="form-success" style="display: none; background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 40px;">
+                <span class="emoji">✅</span>
+                <strong>¡Gracias por contactarnos!</strong>
+                <span>Hemos recibido tu mensaje. Un especialista se pondrá en contacto contigo pronto.</span>
+            </div>
         </div>
     </div>
 </section>
@@ -917,6 +924,46 @@
         document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
         if (!isOpen) item.classList.add('open');
     }
+
+    // Contact Form Handler for Google Sheets
+    document.addEventListener('DOMContentLoaded', function() {
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxfp928IQryryvnc-JeTqkW2SI-QkTTBTGE2fG_6jopTqeUIUuYwF-pGVjDG3vCBXGr/exec';
+        const form = document.getElementById('contactForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMsg = document.getElementById('formSuccess');
+
+        if (form) {
+            form.addEventListener('submit', e => {
+                e.preventDefault();
+                
+                // Show loading state
+                const originalBtnText = submitBtn.innerText;
+                submitBtn.innerText = 'Enviando...';
+                submitBtn.style.opacity = '0.7';
+                submitBtn.disabled = true;
+
+                // Send data
+                fetch(scriptURL, { 
+                    method: 'POST', 
+                    body: new FormData(form),
+                    mode: 'no-cors' // Google specific requirement for no-cors to avoid CORS errors when sending post to Apps Script web app
+                })
+                .then(response => {
+                    // Because of no-cors, response is opaque and we assume success if it didn't throw network error.
+                    form.style.display = 'none';
+                    successMsg.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error!', error.message);
+                    alert('Hubo un error al enviar el formulario. Por favor, intenta de nuevo o comunícate vía WhatsApp.');
+                    // Revert button
+                    submitBtn.innerText = originalBtnText;
+                    submitBtn.style.opacity = '1';
+                    submitBtn.disabled = false;
+                });
+            });
+        }
+    });
 </script>
 
 
