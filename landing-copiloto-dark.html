@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Copiloto de Pymes — El copiloto inteligente que protege tu empresa</title>
-    <meta name="description" content="IA predictiva que detecta riesgos tributarios y laborales antes de que se conviertan en multas. Conecta tu RUT y empieza en 2 minutos.">
+    <title>Copiloto de Pymes — El primer CFO Automatizado para Pymes en Chile</title>
+    <meta name="description" content="Conectamos tu SII en modo lectura. Nuestra IA detecta F29 atrasados, facturas por vencer y riesgos de flujo de caja, avisándote por WhatsApp antes de que se conviertan en multas.">
 
     <!-- Open Graph / WhatsApp / redes sociales -->
     <meta property="og:type"        content="website">
@@ -302,12 +302,17 @@
         .cp { color: var(--warning); }
 
         /* PRICING */
-        .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 56px; align-items: start; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); grid-template-rows: auto auto auto auto 1fr auto; column-gap: 20px; margin-top: 56px; }
         .plan {
+            grid-row: span 6;
             background: var(--card); border: 1px solid var(--border);
             border-radius: 18px; padding: 36px 28px;
             transition: all 0.3s; position: relative;
+            display: grid;
+            grid-template-rows: subgrid;
+            align-content: start;
         }
+        .plan-note { font-size: 12px; color: var(--dim); margin-top: -16px; margin-bottom: 8px; min-height: 0; }
         .plan:hover { background: var(--card-h); transform: translateY(-3px); }
         .plan.pop {
             border-color: rgba(0,214,143,0.35);
@@ -489,11 +494,11 @@
             <ul class="nav-links">
                 <li><a href="#solucion">Funcionalidades</a></li>
                 <li><a href="#comparativa">Comparativa</a></li>
-                <li><a href="#precios">Precios</a></li>
+                <li><a href="#pricing">Precios</a></li>
                 <li><a href="#faq">FAQ</a></li>
             </ul>
             <a href="dashboard.html" target="_blank" class="btn btn-ghost nav-demo-btn" style="margin-right:8px;">Ver demo</a>
-            <a href="#cta-final" class="btn btn-primary">Acceso Anticipado</a>
+            <a href="#pricing" class="btn btn-primary">Ver Planes y Precios</a>
         </div>
     </div>
 </nav>
@@ -503,40 +508,18 @@
     <div class="container">
         <div class="hero-badge">
             <div class="hero-badge-dot"></div>
-            Acceso beta anticipado — Primeros 100 gratis por 3 meses
+            Disponible ahora — Sin contratos anuales
         </div>
-        <h1>El copiloto inteligente que<br><span class="grad">protege tu empresa</span></h1>
-        <p class="hero-sub">IA predictiva que detecta riesgos tributarios y laborales antes de que se conviertan en multas. Conecta tu RUT y empieza en 2 minutos.</p>
+        <h1>El primer CFO Automatizado<br><span class="grad">para Pymes en Chile.</span></h1>
+        <p class="hero-sub">Conectamos tu SII en modo lectura. Nuestra IA detecta F29 atrasados, facturas por vencer y riesgos de flujo de caja, avisándote por WhatsApp antes de que se conviertan en multas.</p>
 
-        <div class="hero-form-wrap">
-            <form class="hero-form" id="hero-form" onsubmit="handleSubmit(event, 'hero-form')">
-                <div class="form-row">
-                    <input type="text" name="nombre" placeholder="Tu nombre" required>
-                    <input type="text" name="empresa" placeholder="Nombre de tu empresa">
-                </div>
-                <input type="email" name="email" placeholder="Tu correo electrónico" required>
-                <select name="empleados">
-                    <option value="" disabled selected>¿Cuántos empleados tienes?</option>
-                    <option value="0">Solo yo (sin empleados)</option>
-                    <option value="1-5">1 a 5 empleados</option>
-                    <option value="6-20">6 a 20 empleados</option>
-                    <option value="21+">Más de 20 empleados</option>
-                </select>
-                <button type="submit" class="btn btn-primary btn-lg">Quiero acceso anticipado gratuito →</button>
-            </form>
-            <div class="hero-demo-link">
-              <a href="dashboard.html" target="_blank" class="hero-demo-a">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-                Ver demo del dashboard →
-              </a>
-            </div>
+        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:36px;">
+            <a href="#pricing" class="btn btn-primary btn-lg">Ver Planes y Precios →</a>
+            <a href="https://wa.me/56964554988?text=Hola%2C%20quiero%20hablar%20con%20ventas%20de%20Copiloto%20de%20Pymes" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-lg">Hablar con Ventas</a>
         </div>
 
-        <div class="social-proof">
-            <div class="sp-text">🚀 <strong>Acceso anticipado con precio de fundador</strong> — cupos limitados</div>
-        </div>
         <div class="hero-trust">
-            <div class="trust-item"><span class="trust-ck">✓</span> Sin tarjeta de crédito</div>
+            <div class="trust-item"><span class="trust-ck">✓</span> Sin contratos anuales</div>
             <div class="trust-item"><span class="trust-ck">✓</span> Cancela cuando quieras</div>
             <div class="trust-item"><span class="trust-ck">✓</span> 100% en español</div>
         </div>
@@ -562,6 +545,41 @@
 </section>
 
 <div class="glow-line"></div>
+
+<!-- TRUST BADGES -->
+<section style="background:rgba(0,214,143,0.03);border-bottom:1px solid rgba(0,214,143,0.1);padding:28px 0;">
+    <div class="container">
+        <div style="display:flex;align-items:center;justify-content:center;gap:32px;flex-wrap:wrap;text-align:center;">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:44px;height:44px;border-radius:10px;background:rgba(0,214,143,0.1);border:1px solid rgba(0,214,143,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div style="text-align:left;">
+                    <div style="font-size:13px;font-weight:700;color:var(--text);">Seguridad de Grado Bancario</div>
+                    <div style="font-size:12px;color:var(--dim);line-height:1.5;">Encriptación AES-256-GCM · Solo modo lectura</div>
+                </div>
+            </div>
+            <div style="width:1px;height:36px;background:var(--border);flex-shrink:0;display:none;" class="trust-divider"></div>
+            <div style="max-width:520px;">
+                <p style="font-size:13px;color:var(--muted);line-height:1.6;">Tus credenciales del SII son encriptadas con protocolo <strong style="color:var(--text);">AES-256-GCM</strong>. Operamos en estricto <strong style="color:var(--text);">modo lectura</strong>. Nadie en nuestro equipo tiene acceso a tu clave.</p>
+            </div>
+            <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;">
+                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dim);">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Sin escritura en SII
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dim);">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Clave nunca almacenada
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dim);">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Datos nunca vendidos
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- STATS -->
 <section id="stats">
@@ -644,18 +662,18 @@
         <div class="steps-grid">
             <div class="step aos">
                 <div class="step-num">1</div>
-                <div class="step-title">Conecta tu RUT</div>
-                <p class="step-desc">Autoriza el acceso a tu información del SII de forma segura. No guardamos tu clave — usamos OAuth2 con encriptación AES-256.</p>
+                <div class="step-title">Conecta tu Pyme</div>
+                <p class="step-desc">Ingresa tu RUT y clave SII en nuestra bóveda segura. Encriptación AES-256-GCM. Nadie en nuestro equipo puede leer tus credenciales.</p>
             </div>
             <div class="step aos aos-d1">
                 <div class="step-num">2</div>
-                <div class="step-title">Activa tu semáforo</div>
-                <p class="step-desc">En segundos analizamos tu situación y te mostramos 5 indicadores clave en verde, amarillo o rojo. Sin jerga contable.</p>
+                <div class="step-title">El Motor Analiza</div>
+                <p class="step-desc">Nuestro algoritmo escanea tu Registro de Compra y Venta (RCV) y F29 automáticamente cada 6 horas. Sin intervención manual.</p>
             </div>
             <div class="step aos aos-d2">
                 <div class="step-num">3</div>
-                <div class="step-title">Recibe alertas a tiempo</div>
-                <p class="step-desc">Te avisamos por correo y WhatsApp 30, 15 y 7 días antes de cada vencimiento. Nunca más una multa por olvido.</p>
+                <div class="step-title">Alertas por WhatsApp</div>
+                <p class="step-desc">Recibe notificaciones predictivas en tu celular solo cuando haya riesgos de multas o fechas límite críticas. Sin spam, sin ruido.</p>
             </div>
         </div>
     </div>
@@ -692,59 +710,65 @@
     </div>
 </section>
 
-<!-- PRECIOS -->
-<section id="precios" class="section alt">
+<!-- PRICING -->
+<section id="pricing" class="section alt">
     <div class="container center">
         <div class="section-tag">Planes y precios</div>
         <h2>Precios diseñados para PyMES,<br>no para grandes empresas.</h2>
         <p class="section-sub">Sin contratos anuales. Sin costos de implementación. Cancela cuando quieras.</p>
         <div class="pricing-grid">
+
+            <!-- PLAN 1: Radar -->
             <div class="plan aos">
-                <div class="plan-name">Emprendedor</div>
-                <p class="plan-desc">Para comenzar y probar antes de comprometerse.</p>
-                <div class="plan-price"><div class="price-free">Gratis</div><div class="price-p">para siempre</div></div>
+                <div class="plan-name">Copiloto Radar</div>
+                <p class="plan-desc">Para microempresas e independientes.</p>
+                <div class="plan-price"><span class="price-n">$19.990</span><span class="price-p"> / mes</span></div>
+                <div class="plan-note"></div>
                 <ul class="plan-feats">
-                    <li><span class="ck">✓</span> Dashboard básico de cumplimiento</li>
-                    <li><span class="ck">✓</span> Alertas solo de IVA (F29)</li>
-                    <li><span class="ck">✓</span> Semáforo de estado tributario</li>
-                    <li><span class="ck">✓</span> Notificaciones por correo</li>
-                    <li style="color:var(--dim)">✗ Control laboral 40 hrs</li>
-                    <li style="color:var(--dim)">✗ Predicción de flujo de caja</li>
-                    <li style="color:var(--dim)">✗ Chatbot IA</li>
+                    <li><span class="ck">✓</span> Sincronización 1 vez al día</li>
+                    <li><span class="ck">✓</span> Dashboard Web con Semáforo Tributario</li>
+                    <li><span class="ck">✓</span> Alertas WhatsApp estado Rojo: F29 atrasado</li>
+                    <li><span class="ck">✓</span> Alertas WhatsApp: Anotaciones SII</li>
+                    <li style="color:var(--dim)">✗ Sincronización cada 6 horas</li>
+                    <li style="color:var(--dim)">✗ Alertas predictivas de facturas</li>
+                    <li style="color:var(--dim)">✗ Asistente IA en WhatsApp</li>
                 </ul>
-                <a href="#cta-final" class="btn btn-ghost btn-full">Comenzar gratis</a>
+                <a href="https://wa.me/56964554988?text=Hola%2C%20quiero%20el%20Plan%20Radar%20de%20Copiloto%20de%20Pymes" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-full">Elegir Plan Radar</a>
             </div>
+
+            <!-- PLAN 2: CFO Predictivo (destacado) -->
             <div class="plan pop aos aos-d1">
-                <div class="pop-badge">⭐ Más popular</div>
-                <div class="plan-name">Cumplimiento Total</div>
-                <p class="plan-desc">Ideal para PyMES con hasta 5 empleados que quieren protección completa.</p>
-                <div class="plan-price"><span class="price-n">$19.990</span><span class="price-p">/mes</span></div>
+                <div class="pop-badge">⭐ Más Popular</div>
+                <div class="plan-name">CFO Predictivo</div>
+                <p class="plan-desc">Para Pymes que no pueden arriesgarse a perder el IVA o pagar multas.</p>
+                <div class="plan-price"><span class="price-n">$49.990</span><span class="price-p"> / mes</span></div>
+                <div class="plan-note"></div>
                 <ul class="plan-feats">
-                    <li><span class="ck">✓</span> Todo el plan Emprendedor</li>
-                    <li><span class="ck">✓</span> <strong>Todas</strong> las alertas tributarias</li>
-                    <li><span class="ck">✓</span> Control 40 hrs (hasta 3 trabajadores)</li>
-                    <li><span class="ck">✓</span> Alertas cotizaciones Previred</li>
-                    <li><span class="ck">✓</span> Chatbot IA básico (tributario)</li>
-                    <li><span class="ck">✓</span> Alertas por WhatsApp</li>
-                    <li><span class="ck">✓</span> Score de cumplimiento en tiempo real</li>
+                    <li><span class="ck">✓</span> Todo lo del plan Radar</li>
+                    <li><span class="ck">✓</span> Sincronización intensiva cada 6 horas</li>
+                    <li><span class="ck">✓</span> Alertas predictivas: facturas por vencer en 8 días</li>
+                    <li><span class="ck">✓</span> Diferencias RCV detectadas automáticamente</li>
+                    <li><span class="ck">✓</span> Asistente IA en WhatsApp (consultas tributarias)</li>
                 </ul>
-                <a href="#cta-final" class="btn btn-primary btn-full">Quiero acceso anticipado</a>
+                <a href="https://wa.me/56964554988?text=Hola%2C%20quiero%20el%20plan%20CFO%20Predictivo%20de%20Copiloto%20de%20Pymes" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-full">Elegir CFO Predictivo →</a>
             </div>
+
+            <!-- PLAN 3: Partners -->
             <div class="plan aos aos-d2">
-                <div class="plan-name">Escalabilidad</div>
-                <p class="plan-desc">Para empresas en crecimiento que necesitan predicción financiera avanzada.</p>
-                <div class="plan-price"><span class="price-n">$39.990</span><span class="price-p">/mes</span></div>
+                <div class="plan-name">Plan Partners</div>
+                <p class="plan-desc">Para Contadores, Agencias y Holdings.</p>
+                <div class="plan-price"><span class="price-n">$129.900</span><span class="price-p"> / mes</span></div>
+                <div class="plan-note">Incluye 10 RUTs · $9.990 por RUT adicional</div>
                 <ul class="plan-feats">
-                    <li><span class="ck">✓</span> Todo el plan Cumplimiento Total</li>
-                    <li><span class="ck">✓</span> Control laboral (hasta 5 trabajadores)</li>
-                    <li><span class="ck">✓</span> Predicción flujo de caja 30/60/90 días</li>
-                    <li><span class="ck">✓</span> Calculadora de decisiones</li>
-                    <li><span class="ck">✓</span> Chatbot IA avanzado (laboral + financiero)</li>
-                    <li><span class="ck">✓</span> Benchmarking vs industria</li>
-                    <li><span class="ck">✓</span> Hasta 5 usuarios del equipo</li>
+                    <li><span class="ck">✓</span> Todo lo de CFO Predictivo</li>
+                    <li><span class="ck">✓</span> Panel multicuentas (semáforos de todos los clientes)</li>
+                    <li><span class="ck">✓</span> Enrutamiento de alertas configurable</li>
+                    <li><span class="ck">✓</span> $9.990 por RUT adicional</li>
+                    <li><span class="ck">✓</span> Soporte prioritario</li>
                 </ul>
-                <a href="#cta-final" class="btn btn-ghost btn-full">Quiero acceso anticipado</a>
+                <a href="https://wa.me/56964554988?text=Hola%2C%20me%20interesa%20el%20Plan%20Partners%20de%20Copiloto%20de%20Pymes" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-full">Contactar Partners</a>
             </div>
+
         </div>
     </div>
 </section>
@@ -801,21 +825,14 @@
 <!-- FINAL CTA -->
 <section id="cta-final">
     <div class="container">
-        <div class="section-tag">Lista de espera</div>
-        <h2><span class="grad">Los primeros 100 en registrarse</span><br>obtienen 3 meses gratis</h2>
-        <p class="lead">Más precio de fundador de por vida. Sin condiciones. Solo por ser de los primeros.</p>
-        <!-- ===================================================
-             TODO: Conectar formulario a Google Forms
-             1. Crear un Google Form con campo "email"
-             2. Copiar la URL de acción del formulario (formato: https://docs.google.com/forms/d/e/TU_ID/formResponse)
-             3. Reemplazar "#" en el action del form por esa URL
-             4. Agregar el atributo name="entry.XXXXXXXXX" al input email
-             =================================================== -->
-        <form class="cta-form" id="cta-form" onsubmit="handleSubmit(event, 'cta-form')">
-            <input type="email" name="email" placeholder="Tu correo electrónico" required>
-            <button type="submit" class="btn btn-primary">Reservar mi lugar →</button>
-        </form>
-        <p class="cta-note">Sin spam. Sin cargos. Solo te avisamos cuando esté listo.</p>
+        <div class="section-tag">Empieza hoy</div>
+        <h2><span class="grad">Tu Pyme merece saber</span><br>antes de que sea tarde</h2>
+        <p class="lead">Sin contratos. Sin instalaciones. Conecta tu RUT y tu primer alerta llega en menos de 24 horas.</p>
+        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:8px;">
+            <a href="#pricing" class="btn btn-primary btn-lg">Ver Planes y Precios →</a>
+            <a href="https://wa.me/56964554988?text=Hola%2C%20quiero%20hablar%20con%20ventas%20de%20Copiloto%20de%20Pymes" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-lg">Hablar con Ventas</a>
+        </div>
+        <p class="cta-note" style="margin-top:20px;">Sin tarjeta de crédito · Cancela cuando quieras · 100% en español</p>
     </div>
 </section>
 
@@ -830,9 +847,8 @@
                 Copiloto de Pymes
             </a>
             <ul class="footer-links">
-                <li><a href="#">Privacidad</a></li>
-                <li><a href="#">Términos de uso</a></li>
-                <li><a href="#">Contacto</a></li>
+                <li><a href="#">Términos y Condiciones y Política de Privacidad</a></li>
+                <li><a href="https://wa.me/56964554988?text=Hola%2C%20quiero%20contactar%20a%20Copiloto%20de%20Pymes" target="_blank" rel="noopener noreferrer">Contacto</a></li>
             </ul>
             <div class="footer-copy">© 2026 Copiloto de Pymes. Hecho en Chile 🇨🇱</div>
         </div>
@@ -840,22 +856,6 @@
 </footer>
 
 <script>
-    // ============================================================
-    // PASO 1: Pega aquí la URL de acción de tu Google Form
-    //   Formato: https://docs.google.com/forms/d/e/TU_ID/formResponse
-    // PASO 2: Reemplaza los entry.XXXXXXXXX con los IDs reales
-    //   (sigue las instrucciones del README para encontrarlos)
-    // ============================================================
-    const FORM_CONFIG = {
-        action: 'https://docs.google.com/forms/d/e/1FAIpQLSeznZ0rgvmFVigzR1iELeIAp6TpkhEqvgqFCS-tAH9KrlfWcw/formResponse',
-        fields: {
-            nombre:    'entry.1951241723',
-            empresa:   'entry.1847683883',
-            email:     'entry.674134961',
-            empleados: 'entry.1387226411'
-        }
-    };
-
     window.addEventListener('scroll', () => {
         document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
     });
@@ -870,41 +870,6 @@
         const isOpen = item.classList.contains('open');
         document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
         if (!isOpen) item.classList.add('open');
-    }
-
-    function handleSubmit(event, formId) {
-        event.preventDefault();
-        const form = event.target;
-        const btn = form.querySelector('button[type="submit"]');
-        btn.textContent = 'Enviando...';
-        btn.disabled = true;
-
-        const raw = Object.fromEntries(new FormData(form));
-
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyNCUlraNdbw8aNMd4aQx-2rhnUppQJENJ3QOtqVQj_DiVS0ezAU0epwzwErwseMquA/exec';
-
-        const body = new URLSearchParams({
-            nombre:    raw.nombre    || '',
-            empresa:   raw.empresa   || '',
-            email:     raw.email     || '',
-            empleados: raw.empleados || '',
-            fuente:    formId === 'cta-form' ? 'footer' : 'hero'
-        });
-
-        fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body })
-            .catch(() => {});
-
-        setTimeout(() => showFormSuccess(form), 800);
-    }
-
-    function showFormSuccess(form) {
-        form.innerHTML = `
-            <div class="form-success">
-                <span class="emoji">🎉</span>
-                <strong>¡Estás en la lista!</strong>
-                <span>Te avisamos cuando tengamos acceso disponible. Revisa tu correo.</span>
-            </div>
-        `;
     }
 </script>
 
